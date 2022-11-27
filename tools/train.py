@@ -47,15 +47,14 @@ def main():
     torch.cuda.set_device(args.local_rank)
     torch.distributed.init_process_group(backend='nccl', init_method='env://')
     synchronize()
+    if args.tea_config is not None:
+        tea_config = parse_config(args.tea_config)
+    else:
+        tea_config = None
 
     config = parse_config(args.config_file)
     config.merge(args.opts)
 
-    if args.tea_config is not None:
-        tea_config = parse_config(args.tea_config)
-        tea_config = copy.deepcopy(tea_config)
-    else:
-        tea_config = None
 
     trainer = Trainer(config, args, tea_config)
     trainer.train(args.local_rank)
