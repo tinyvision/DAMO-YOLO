@@ -1,0 +1,12 @@
+timm
+omegaconf
+numpy
+opencv_python
+loguru
+scikit-image
+tqdm
+Pillow
+thop
+ninja
+tabulate
+easydict

@@ -1,0 +1,212 @@
+Copyright (c) 2021-2022 Alibaba Group Holding Limited.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+===========================================================
+
+
+MIT License
+-----------------------------
+
+damo/utils/timer.py
+damo/utils/imports.py
+damo/dataset/transforms/tta_aug.py
+damo/dataset/build.py
+damo/dataset/collate_batch.py
+damo/dataset/datasets/concat_dataset.py
+damo/dataset/datasets/evaluation/coco/coco_eval.py
+damo/dataset/samplers/distributed.py
+damo/dataset/samplers/grouped_batch_sampler.py
+damo/structures/bounding_box.py
+damo/structures/boxlist_ops.py
+damo/structures/image_list.py
+Copyright (c) Facebook, Inc. and its affiliates.
+All Rights Reserved.
+
+
+Apache License 2.0 License
+-----------------------------
+
+damo/core/anchor.py
+damo/core/sampler.py
+damo/core/utils.py
+damo/core/weight_init.py
+damo/core/backbone/darknet.py
+damo/core/ota_assigner.py
+damo/core/atss_assigner.py
+damo/base_models/losses/losses.py
+damo/base_models/backbones/darknet.py
+damo/base_models/necks/pafpn.py
+opyright (c) OpenMMLab.
+All rights reserved.
+
+
+Creative Commons Attribution-NonCommercial 4.0 International Public License
+-----------------------------
+
+tools/onnx_inference.py
+
+============================================================
+Packages installed by codes or PIP.
+============================
+PyTorch's BSD-style license
+============================
+From PyTorch:
+
+Copyright (c) 2016-     Facebook, Inc            (Adam Paszke)
+Copyright (c) 2014-     Facebook, Inc            (Soumith Chintala)
+Copyright (c) 2011-2014 Idiap Research Institute (Ronan Collobert)
+Copyright (c) 2012-2014 Deepmind Technologies    (Koray Kavukcuoglu)
+Copyright (c) 2011-2012 NEC Laboratories America (Koray Kavukcuoglu)
+Copyright (c) 2011-2013 NYU                      (Clement Farabet)
+Copyright (c) 2006-2010 NEC Laboratories America (Ronan Collobert, Leon Bottou, Iain Melvin, Jason Weston)
+Copyright (c) 2006      Idiap Research Institute (Samy Bengio)
+Copyright (c) 2001-2004 Idiap Research Institute (Ronan Collobert, Samy Bengio, Johnny Mariethoz)
+
+From Caffe2:
+
+Copyright (c) 2016-present, Facebook Inc. All rights reserved.
+
+All contributions by Facebook:
+Copyright (c) 2016 Facebook Inc.
+
+All contributions by Google:
+Copyright (c) 2015 Google Inc.
+All rights reserved.
+
+All contributions by Yangqing Jia:
+Copyright (c) 2015 Yangqing Jia
+All rights reserved.
+
+All contributions by Kakao Brain:
+Copyright 2019-2020 Kakao Brain
+
+All contributions by Cruise LLC:
+Copyright (c) 2022 Cruise LLC.
+All rights reserved.
+
+All contributions from Caffe:
+Copyright(c) 2013, 2014, 2015, the respective contributors
+All rights reserved.
+
+All other contributions:
+Copyright(c) 2015, 2016 the respective contributors
+All rights reserved.
+
+Caffe2 uses a copyright model similar to Caffe: each contributor holds
+copyright over their contributions to Caffe2. The project versioning records
+all such contribution and copyright details. If a contributor wants to further
+mark their specific copyright on a particular contribution, they should
+indicate their copyright solely in the commit message of the change when it is
+committed.
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+
+3. Neither the names of Facebook, Deepmind Technologies, NYU, NEC Laboratories America
+   and IDIAP Research Institute nor the names of its contributors may be
+   used to endorse or promote products derived from this software without
+   specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+============================
+Pillow's HPND License
+============================
+The Python Imaging Library (PIL) is
+
+    Copyright © 1997-2011 by Secret Labs AB
+    Copyright © 1995-2011 by Fredrik Lundh
+
+Pillow is the friendly PIL fork. It is
+
+    Copyright © 2010-2022 by Alex Clark and contributors
+
+Like PIL, Pillow is licensed under the open source HPND License:
+
+By obtaining, using, and/or copying this software and/or its associated
+documentation, you agree that you have read, understood, and will comply
+with the following terms and conditions:
+
+Permission to use, copy, modify, and distribute this software and its
+associated documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appears in all copies, and that
+both that copyright notice and this permission notice appear in supporting
+documentation, and that the name of Secret Labs AB or the author not be
+used in advertising or publicity pertaining to distribution of the software
+without specific, written prior permission.
+
+SECRET LABS AB AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.
+IN NO EVENT SHALL SECRET LABS AB OR THE AUTHOR BE LIABLE FOR ANY SPECIAL,
+INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
+OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+
+============================
+BSD License
+============================
+numpy==1.21.5
+omegaconf
+scikit-image
+
+
+============================
+Apache Software License
+============================
+Cython==0.29.24
+
+============================
+Apache License 2.0 License
+============================
+onnx==1.8.1
+onnx-simplifier==0.3.5
+ninja
+timm
+
+============================
+MIT License
+============================
+tabulate==0.8.9
+thop==0.0.31
+opencv-python==4.5.4.60
+thop
+tensorboard
+onnxruntime==1.8.0
+loguru
+scikit-image
+tqdm
+
+============================
+LGPL-3.0 License
+============================
+easydict
