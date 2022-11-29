@@ -18,9 +18,9 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
 ## Model Zoo
 |Model |size |mAP<sup>val<br>0.5:0.95 | Latency T4<br>TRT-FP16-BS1| FLOPs<br>(G)| Params<br>(M)| Download |
 | ------        |:---: | :---:     |:---:|:---: | :---: | :---:|
-|[DAMO-YOLO-T](./configs/damoyolo_tinynasL20_T.py) | 640 | 43.0  | 2.78  | 18.1  | 8.5  | [link](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/damoyolo_tinynasL20_T.pth)  |
-|[DAMO-YOLO-S](./configs/damoyolo_tinynasL25_S.py) | 640 | 46.8  | 3.83  | 37.8  | 16.3  |[link](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/damoyolo_tinynasL25_S.pth)  |
-|[DAMO-YOLO-M](./configs/damoyolo_tinynasL35_M.py) | 640 | 50.0  | 5.62  | 61.8  | 28.2  | [link](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/damoyolo_tinynasL35_M.pth) |
+|[DAMO-YOLO-T](./configs/damoyolo_tinynasL20_T.py) | 640 | 43.0  | 2.78  | 18.1  | 8.5  |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/damoyolo_tinynasL20_T.pth),[onnx](http://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/damoyolo_tinynasL20_T.onnx)  |
+|[DAMO-YOLO-S](./configs/damoyolo_tinynasL25_S.py) | 640 | 46.8  | 3.83  | 37.8  | 16.3 |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/damoyolo_tinynasL25_S.pth),[onnx](http://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/damoyolo_tinynasL25_S.onnx)  |
+|[DAMO-YOLO-M](./configs/damoyolo_tinynasL35_M.py) | 640 | 50.0  | 5.62  | 61.8  | 28.2 |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/damoyolo_tinynasL35_M.pth),[onnx](http://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/damoyolo_tinynasL35_M.onnx)|
 
 - We report the mAP of models on COCO2017 validation set, with multi-class NMS.
 - The latency in this table is measured without post-processing.
@@ -107,6 +107,23 @@ python -m torch.distributed.launch --nproc_per_node=8 tools/train.py -f configs/
 python -m torch.distributed.launch --nproc_per_node=8 tools/eval.py -f configs/damoyolo_tinynasL25_S.py --ckpt /path/to/your/damoyolo_tinynasL25_S.pth
 ```
 </details>
+
+
+<details>
+<summary>Customize tinynas backbone</summary>
+Step1. If you want to customize your own backbone, please refer to [TinyNAS](https://github.com/alibaba/lightweight-neural-architecture-search). There is a detailed tutorial about how to obtain a excellent backbone under the budget of latency/flops in scritps/damo-yolo.  
+
+Step2. After the searching process completed, you can replace the structure text in configs with it. The backbone will formed as ResNet or CSPNet, if the backbone name is TinyNAS_res or TinyNAS_csp, respectively. 
+```
+structure = self.read_structure('tinynas_customize.txt')
+TinyNAS = { 'name'='TinyNAS_res', # ResNet-like Tinynas backbone
+            'out_indices': (2,4,5)}
+TinyNAS = { 'name'='TinyNAS_csp', # CSPNet-like Tinynas backbone
+            'out_indices': (2,3,4)}
+
+```
+</details>
+
 
 
 ## Deploy

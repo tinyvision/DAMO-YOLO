@@ -16,11 +16,12 @@
 - 线上Demo已整合至ModelScope，快去[DAMO-YOLO-S](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo/summary) 体验一下吧！
 
 ## 模型库
-|Model |size |mAP<sup>val<br>0.5:0.95 | Latency T4<br>TRT-FP16-BS1| FLOPs<br>(G)| Params<br>(M)| Download|
-| ------        |:---: | :---:     |:---:|:---: | :---: |:---:|
-|[DAMO-YOLO-T](./configs/damoyolo_tinynasL20_T.py) | 640 | 43.0  | 2.78  | 18.1  | 8.5  | [link](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/damoyolo_tinynasL20_T.pth)|
-|[DAMO-YOLO-S](./configs/damoyolo_tinynasL25_S.py) | 640 | 46.8  | 3.83  | 37.8  | 16.3  | [link](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/damoyolo_tinynasL25_S.pth) |
-|[DAMO-YOLO-M](./configs/damoyolo_tinynasL35_M.py) | 640 | 50.0  | 5.62  | 61.8  | 28.2  | [link](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/damoyolo_tinynasL35_M.pth)|
+|Model |size |mAP<sup>val<br>0.5:0.95 | Latency T4<br>TRT-FP16-BS1| FLOPs<br>(G)| Params<br>(M)| Download |
+| ------        |:---: | :---:     |:---:|:---: | :---: | :---:|
+|[DAMO-YOLO-T](./configs/damoyolo_tinynasL20_T.py) | 640 | 43.0  | 2.78  | 18.1  | 8.5  |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/damoyolo_tinynasL20_T.pth),[onnx](http://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/damoyolo_tinynasL20_T.onnx)  |
+|[DAMO-YOLO-S](./configs/damoyolo_tinynasL25_S.py) | 640 | 46.8  | 3.83  | 37.8  | 16.3 |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/damoyolo_tinynasL25_S.pth),[onnx](http://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/damoyolo_tinynasL25_S.onnx)  |
+|[DAMO-YOLO-M](./configs/damoyolo_tinynasL35_M.py) | 640 | 50.0  | 5.62  | 61.8  | 28.2 |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/damoyolo_tinynasL35_M.pth),[onnx](http://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/damoyolo_tinynasL35_M.onnx)|
+
 
 
 - 上表中汇报的是COCO2017 val集上的结果, 测试时使用multi-class NMS。
@@ -105,6 +106,24 @@ python -m torch.distributed.launch --nproc_per_node=8 tools/train.py -f configs/
 python -m torch.distributed.launch --nproc_per_node=8 tools/eval.py -f configs/damoyolo_tinynasL25_S.py --ckpt /path/to/your/damoyolo_tinynasL25_S.pth
 ```
 </details>
+
+
+<details>
+<summary>使用TinyNAS自定义DAMO-YOLO骨干网络</summary>
+
+步骤1. 如果您想自定义DAMO-YOLO骨干网络，可以参考[TinyNAS](https://github.com/alibaba/lightweight-neural-architecture-search)中的教程，通过该教程您可以使用latency/flops作为约束条件搜索该条件下的最优模型。 
+
+步骤2. 模型搜索结束后，您可以使用搜索的到的模型结构文件替换config中的structure text。将Backbone的name设置成TinyNAS_res或者TinyNAS_CSP将会分别得到ResNet或者CSPNet形式的TinyNAS骨干网络, 请注意到TinyNAS_res骨干网络的out_indices=(2,4,5)而TinyNAS_csp骨干网络的out_indices=(2,3,4)。
+```
+structure = self.read_structure('tinynas_customize.txt')
+TinyNAS = { 'name'='TinyNAS_res', # ResNet形式的Tinynas骨干网络
+            'out_indices': (2,4,5)}
+TinyNAS = { 'name'='TinyNAS_csp', # CSPNet形式的Tinynas骨干网络
+            'out_indices': (2,3,4)}
+
+```
+</details>
+
 
 ## 部署
 

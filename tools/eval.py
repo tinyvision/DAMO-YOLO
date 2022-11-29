@@ -127,7 +127,7 @@ def main():
 
     val_dataset = build_dataset(config, config.dataset.val_ann, is_train=False)
     val_loader = build_dataloader(val_dataset,
-                                  config.test.augment.transform,
+                                  config.test.augment,
                                   batch_size=config.test.batch_size,
                                   num_workers=config.miscs.num_workers,
                                   is_train=False,
