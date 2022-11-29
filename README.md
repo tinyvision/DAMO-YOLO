@@ -111,9 +111,9 @@ python -m torch.distributed.launch --nproc_per_node=8 tools/eval.py -f configs/d
 
 <details>
 <summary>Customize tinynas backbone</summary>
-Step1. If you want to customize your own backbone, please refer to [TinyNAS](https://github.com/alibaba/lightweight-neural-architecture-search). There is a detailed tutorial about how to obtain a excellent backbone under the budget of latency/flops in scritps/damo-yolo.  
+Step1. If you want to customize your own backbone, please refer to [MAE-NAS Tutorial for DAMO-YOLO](https://github.com/alibaba/lightweight-neural-architecture-search/blob/main/scripts/damo-yolo/Tutorial_NAS_for_DAMO-YOLO_cn.md). This is a detailed tutorial about how to obtain an optimal backbone under the budget of latency/flops.  
 
-Step2. After the searching process completed, you can replace the structure text in configs with it. The backbone will formed as ResNet or CSPNet, if the backbone name is TinyNAS_res or TinyNAS_csp, respectively. 
+Step2. After the searching process completed, you can replace the structure text in configs with it. Finally, you can get your own custom ResNet-like or CSPNet-like backbone after setting the backbone name to TinyNAS_res or TinyNAS_csp. Please notice the difference of out_indices between TinyNAS_res and TinyNAS_csp. 
 ```
 structure = self.read_structure('tinynas_customize.txt')
 TinyNAS = { 'name'='TinyNAS_res', # ResNet-like Tinynas backbone

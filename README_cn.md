@@ -111,9 +111,9 @@ python -m torch.distributed.launch --nproc_per_node=8 tools/eval.py -f configs/d
 <details>
 <summary>使用TinyNAS自定义DAMO-YOLO骨干网络</summary>
 
-步骤1. 如果您想自定义DAMO-YOLO骨干网络，可以参考[TinyNAS](https://github.com/alibaba/lightweight-neural-architecture-search)中的教程，通过该教程您可以使用latency/flops作为约束条件搜索该条件下的最优模型。 
+步骤1. 如果您想自定义DAMO-YOLO骨干网络，可以参考[适用于DAMO-YOLO的MAE-NAS教程](https://github.com/alibaba/lightweight-neural-architecture-search/blob/main/scripts/damo-yolo/Tutorial_NAS_for_DAMO-YOLO_cn.md)，通过该教程您可以一步步学习如何使用latency/flops作为约束条件搜索该条件下的最优模型。 
 
-步骤2. 模型搜索结束后，您可以使用搜索的到的模型结构文件替换config中的structure text。将Backbone的name设置成TinyNAS_res或者TinyNAS_CSP将会分别得到ResNet或者CSPNet形式的TinyNAS骨干网络, 请注意到TinyNAS_res骨干网络的out_indices=(2,4,5)而TinyNAS_csp骨干网络的out_indices=(2,3,4)。
+步骤2. 模型搜索结束后，您可以使用搜索得到的模型结构文件替换config中的structure text。把Backbone的name设置成TinyNAS_res或者TinyNAS_csp，将会分别得到ResNet或者CSPNet形式的TinyNAS骨干网络, 请注意到TinyNAS_res骨干网络的out_indices=(2,4,5)而TinyNAS_csp骨干网络的out_indices=(2,3,4)。
 ```
 structure = self.read_structure('tinynas_customize.txt')
 TinyNAS = { 'name'='TinyNAS_res', # ResNet形式的Tinynas骨干网络
