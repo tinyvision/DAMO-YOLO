@@ -56,7 +56,7 @@ pip3 install 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=Python
 
 步骤二. 执行命令时用-f选项指定配置(config)文件。例如:
 ```shell
-python tools/demo.py -f configs/damoyolo_tinynasL25_S.py --ckpt /path/to/your/damoyolo_tinynasL25_S.pth --path assets/dog.jpg
+python tools/torch_inference.py -f configs/damoyolo_tinynasL25_S.py --ckpt /path/to/your/damoyolo_tinynasL25_S.pth --path assets/dog.jpg
 ```
 </details>
 

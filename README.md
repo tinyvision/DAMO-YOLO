@@ -55,7 +55,7 @@ Step1. Download a pretrained model from the benchmark table, e.g., damoyolo_tiny
 
 Step2. Use -f(config filename) to specify your detector's config. For example:
 ```shell
-python tools/demo.py -f configs/damoyolo_tinynasL25_S.py --ckpt /path/to/your/damoyolo_tinynasL25_S.pth --path assets/dog.jpg
+python tools/torch_inference.py -f configs/damoyolo_tinynasL25_S.py --ckpt /path/to/your/damoyolo_tinynasL25_S.pth --path assets/dog.jpg
 ```
 </details>
 
