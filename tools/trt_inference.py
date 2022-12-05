@@ -91,9 +91,9 @@ if __name__ == '__main__':
     img_np = np.asarray(img.tensors)
 
     if args.conf is not None:
-        config.test.conf_threshold = args.conf
+        config.model.head.nms_conf_thre = args.conf
     if args.nms is not None:
-        config.test.nms_iou_threshold = args.nms
+        config.model.head.nms_iou_thre = args.nms
 
     # set logs
     loggert = trt.Logger(trt.Logger.INFO)
@@ -179,8 +179,8 @@ if __name__ == '__main__':
         bbox_preds = torch.Tensor(pred_out[1])
         output = postprocess(cls_scores, bbox_preds,
                              config.model.head.num_classes,
-                             config.model.head.conf_threshold,
-                             config.model.head.nms_iou_threshold, img)
+                             config.model.head.nms_conf_thre,
+                             config.model.head.nms_iou_thre, img)
 
     ratio = min(origin_img.shape[0] / img.image_sizes[0][0],
                 origin_img.shape[1] / img.image_sizes[0][1])
@@ -192,7 +192,7 @@ if __name__ == '__main__':
                   bboxes,
                   scores,
                   cls_inds,
-                  conf=config.test.conf_threshold,
+                  conf=config.model.head.nms_conf_thre,
                   class_names=COCO_CLASSES)
 
     output_folder = os.path.join(config.miscs.output_dir, 'trt_out')

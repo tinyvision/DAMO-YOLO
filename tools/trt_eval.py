@@ -87,9 +87,9 @@ def trt_inference(config,
                  mode='a')
 
     if conf is not None:
-        config.model.head.conf_threshold = conf
+        config.model.head.nms_conf_thre = conf
     if nms is not None:
-        config.model.head.nms_iou_threshold = nms
+        config.model.head.nms_iou_thre = nms
     if batch_size is not None:
         config.test.batch_size = batch_size
 

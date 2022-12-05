@@ -10,7 +10,7 @@
 ## 更新日志
 -  **[2022/11/27: DAMO-YOLO v0.1.0开源!]**
     * 开源DAMO-YOLO-T, DAMO-YOLO-S和DAMO-YOLO-M模型。
-    * 开源模型转换工具，支持onnx导出以及TensorRT-fp32、TensorRT-fp16模型转换。
+    * 开源模型导出工具，支持onnx导出以及TensorRT-fp32、TensorRT-fp16模型导出。
 
 ## 线上Demo
 - 线上Demo已整合至ModelScope，快去[DAMO-YOLO-S](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo/summary) 体验一下吧！
@@ -18,14 +18,23 @@
 ## 模型库
 |Model |size |mAP<sup>val<br>0.5:0.95 | Latency T4<br>TRT-FP16-BS1| FLOPs<br>(G)| Params<br>(M)| Download |
 | ------        |:---: | :---:     |:---:|:---: | :---: | :---:|
-|[DAMO-YOLO-T](./configs/damoyolo_tinynasL20_T.py) | 640 | 43.0  | 2.78  | 18.1  | 8.5  |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/damoyolo_tinynasL20_T.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/damoyolo_tinynasL20_T.onnx)  |
-|[DAMO-YOLO-S](./configs/damoyolo_tinynasL25_S.py) | 640 | 46.8  | 3.83  | 37.8  | 16.3 |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/damoyolo_tinynasL25_S.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/damoyolo_tinynasL25_S.onnx)  |
-|[DAMO-YOLO-M](./configs/damoyolo_tinynasL35_M.py) | 640 | 50.0  | 5.62  | 61.8  | 28.2 |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/damoyolo_tinynasL35_M.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/damoyolo_tinynasL35_M.onnx)|
+|[DAMO-YOLO-T*](./configs/damoyolo_tinynasL20_T.py) | 640 | 43.0  | 2.78  | 18.1  | 8.5  |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/damoyolo_tinynasL20_T.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/damoyolo_tinynasL20_T.onnx)  |
+
+|[DAMO-YOLO-T](./configs/damoyolo_tinynasL20_T.py) | 640 | 41.8  | 2.78  | 18.1  | 8.5  |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/before_distill/damoyolo_tinynasL20_T_418.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/before_distill/damoyolo_tinynasL20_T_418.onnx)  |
+
+|[DAMO-YOLO-S*](./configs/damoyolo_tinynasL25_S.py) | 640 | 46.8  | 3.83  | 37.8  | 16.3 |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/damoyolo_tinynasL25_S.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/damoyolo_tinynasL25_S.onnx)  |
+
+|[DAMO-YOLO-S](./configs/damoyolo_tinynasL25_S.py) | 640 | 45.6  | 3.83  | 37.8  | 16.3 |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/before_distill/damoyolo_tinynasL25_S_456.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/before_distill/damoyolo_tinynasL25_S_456.onnx)  |
+
+|[DAMO-YOLO-M*](./configs/damoyolo_tinynasL35_M.py) | 640 | 50.0  | 5.62  | 61.8  | 28.2 |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/damoyolo_tinynasL35_M.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/damoyolo_tinynasL35_M.onnx)|
+
+|[DAMO-YOLO-M](./configs/damoyolo_tinynasL35_M.py) | 640 | 48.7  | 5.62  | 61.8  | 28.2 |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/before_distill/damoyolo_tinynasL35_M_487.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/before_distill/damoyolo_tinynasL35_M_487.onnx)|
 
 
 
 - 上表中汇报的是COCO2017 val集上的结果, 测试时使用multi-class NMS。
 - 其中latency中不包括后处理时间。
+- *表示模型训练时使用蒸馏。
 
 ## 快速上手
 
@@ -53,12 +62,17 @@ pip3 install 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=Python
 <details>
 <summary>Demo</summary>
 
-步骤一. 从模型库中下载训练好的模型，例如damoyolo_tinynasL25_S.
+步骤一. 从模型库中下载训练好的torch模型或onnx推理引擎，例如damoyolo_tinynasL25_S.pth或damoyolo_tinynasL25_S.onnx
 
 步骤二. 执行命令时用-f选项指定配置(config)文件。例如:
 ```shell
+# torch 推理
 python tools/torch_inference.py -f configs/damoyolo_tinynasL25_S.py --ckpt /path/to/your/damoyolo_tinynasL25_S.pth --path assets/dog.jpg
+
+# onnx 推理
+python tools/onnx_inference.py -f configs/damoyolo_tinynasL25_S.py --onnx /path/to/your/damoyolo_tinynasL25_S.onnx --path assets/dog.jpg
 ```
+
 </details>
 
 <details>
@@ -167,10 +181,14 @@ pip install pycuda==2022.1
 
 
 <details>
-<summary>模型转换</summary>
+<summary>模型导出</summary>
 
-步骤一：将torch模型转换成onnx或者TensorRT推理引擎。具体使用方法如下：
+步骤一：将torch模型导出成onnx或者TensorRT推理引擎。具体使用方法如下：
 ```shell
+# onnx 导出
+python tools/converter.py -f configs/damoyolo_tinynasL25_S.py -c damoyolo_tinynasL25_S.pth --batch_size 1 --img_size 640
+
+# trt 导出
 python tools/converter.py -f configs/damoyolo_tinynasL25_S.py -c damoyolo_tinynasL25_S.pth --batch_size 1 --img_size 640 --trt --end2end --trt_eval
 ```
 其中--end2end表示在导出的onnx或者TensorRT引擎中集成NMS模块，--trt_eval表示在TensorRT导出完成后即在coco2017 val上进行精度验证。
@@ -181,11 +199,18 @@ python tools/converter.py -f configs/damoyolo_tinynasL25_S.py -c damoyolo_tinyna
 python tools/trt_eval.py -f configs/damoyolo_tinynasL25_S.py -trt deploy/damoyolo_tinynasL25_S_end2end.trt --batch_size 1 --img_size 640 --end2end
 ```
 
-步骤二：使用已经导出的TensorRT引擎进行目标检测。
+步骤二：使用已经导出的onnx或TensorRT引擎进行目标检测。
 ```shell
+# onnx 推理
+python tools/onnx_inference.py -f configs/damoyolo_tinynasL25_S.py --onnx /path/to/your/damoyolo_tinynasL25_S.onnx --path assets/dog.jpg
+
+# trt 推理
 python tools/trt_inference.py -f configs/damoyolo_tinynasL25_s.py -t deploy/damoyolo_tinynasL25_S_end2end_fp16_bs1.trt -p assets/dog.jpg --img_size 640 --end2end
 ```
 </details>
+
+## 实习生招聘
+我们正在招聘研究型实习生，如果您对目标检测/模型量化/神经网络搜索等方向有兴趣，敬请将简历投递到xiuyu.sxy@alibaba-inc.com。
 
 ## 引用
 

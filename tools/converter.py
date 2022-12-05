@@ -12,16 +12,10 @@ from damo.base_models.core.ops import RepConv, SiLU
 from damo.config.base import parse_config
 from damo.detectors.detector import build_local_model
 from damo.utils.model_utils import get_model_info, replace_module
-from trt_eval import trt_inference
 
 
 def make_parser():
     parser = argparse.ArgumentParser('damo converter deployment toolbox')
-    # mode part
-    parser.add_argument('--mode',
-                        default='onnx',
-                        type=str,
-                        help='onnx, trt_16 or trt_32')
     # model part
     parser.add_argument(
         '-f',
@@ -74,30 +68,9 @@ def make_parser():
     parser.add_argument('--trt_eval',
                         action='store_true',
                         help='trt evaluation')
-    parser.add_argument('--with-preprocess',
-                        action='store_true',
-                        help='export bgr2rgb and normalize')
-    parser.add_argument('--topk-all',
-                        type=int,
-                        default=100,
-                        help='topk objects for every images')
-    parser.add_argument('--iou-thres',
-                        type=float,
-                        default=0.65,
-                        help='iou threshold for NMS')
-    parser.add_argument('--conf-thres',
-                        type=float,
-                        default=0.05,
-                        help='conf threshold for NMS')
     parser.add_argument('--device',
                         default='0',
                         help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
-    parser.add_argument(
-        'opts',
-        help='Modify config options using the command-line',
-        default=None,
-        nargs=argparse.REMAINDER,
-    )
 
     return parser
 
@@ -162,7 +135,6 @@ def main():
     ), '--half only compatible with GPU export, i.e. use --device 0'
     # init and load model
     config = parse_config(args.config_file)
-    config.merge(args.opts)
 
     if args.batch_size is not None:
         config.test.batch_size = args.batch_size
@@ -235,6 +207,7 @@ def main():
         trt_name = trt_export(onnx_name, args.batch_size, args.img_size,
                               args.img_size, args.half)
         if args.trt_eval:
+            from trt_eval import trt_inference
             logger.info('start trt inference on coco validataion dataset')
             trt_inference(config, trt_name, args.img_size, args.batch_size,
                           args.conf_thres, args.iou_thres, args.end2end)
