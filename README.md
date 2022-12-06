@@ -10,7 +10,7 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
 ## Updates
 - **[2022/11/27: We release  DAMO-YOLO v0.1.0!]**
   * Release DAMO-YOLO object detection models, including DAMO-YOLO-T, DAMO-YOLO-S and DAMO-YOLO-M.
-  * Release model convert tools for esay deployment, surppots onnx and TensorRT-fp32, TensorRT-fp16.
+  * Release model convert tools for easy deployment, supports onnx and TensorRT-fp32, TensorRT-fp16.
 
 ## Web Demo
 - [DAMO-YOLO-S](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo/summary) is integrated into ModelScope. Try out the Web Demo.
