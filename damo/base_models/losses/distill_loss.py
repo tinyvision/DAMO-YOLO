@@ -56,12 +56,6 @@ class MimicLoss(nn.Module):
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.mse = nn.MSELoss()
 
-        self.align_module = [
-            nn.Conv2d(channel, tea_channel, kernel_size=1, stride=1,
-                      padding=0).to(device)
-            for channel, tea_channel in zip(channels_s, channels_t)
-        ]
-
     def forward(self, y_s, y_t):
         """Forward computation.
         Args:
@@ -75,8 +69,6 @@ class MimicLoss(nn.Module):
         assert len(y_s) == len(y_t)
         losses = []
         for idx, (s, t) in enumerate(zip(y_s, y_t)):
-            s = self.align_module[idx](s)
-            # print(self.align_module[idx].weight) # for debug
             assert s.shape == t.shape
             losses.append(self.mse(s, t))
         loss = sum(losses)
@@ -93,12 +85,6 @@ class MGDLoss(nn.Module):
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.alpha_mgd = alpha_mgd
         self.lambda_mgd = lambda_mgd
-
-        self.align_module = [
-            nn.Conv2d(channel, tea_channel, kernel_size=1, stride=1,
-                      padding=0).to(device)
-            for channel, tea_channel in zip(channels_s, channels_t)
-        ]
 
         self.generation = [
             nn.Sequential(
@@ -121,7 +107,6 @@ class MGDLoss(nn.Module):
         assert len(y_s) == len(y_t)
         losses = []
         for idx, (s, t) in enumerate(zip(y_s, y_t)):
-            s = self.align_module[idx](s)
             assert s.shape == t.shape
             losses.append(self.get_dis_loss(s, t, idx) * self.alpha_mgd)
         loss = sum(losses)
@@ -181,3 +166,4 @@ class CWDLoss(nn.Module):
         loss = sum(losses)
 
         return loss
+
