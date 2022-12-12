@@ -1,0 +1,136 @@
+name: 🐛 Bug Report
+description: Create a report to help us reproduce and fix the bug
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Before Reporting
+      description: >
+        Please check and try following methods to solve it by yourself
+      options:
+        - label: >
+           I have pulled the latest code of main branch to run again and the bug still existed.
+           我已经拉取了主分支上最新的代码，重新运行之后，问题仍不能解决。
+          required: true
+        - label: >
+           I have read the [README](https://github.com/tinyvision/DAMO-YOLO/blob/master/README.md) carefully and no error occured during the installation process. (Otherwise, we recommand that you can ask a question using the Question template)
+           我已经仔细阅读了README上的操作指引，并且在安装过程中没有错误发生。（否则，我们建议您使用Question模板向我们进行提问）
+          required: true
+
+  - type: checkboxes
+    attributes:
+      label: Search before reporting
+      description: >
+        Please search the [issues](https://github.com/tinyvision/DAMO-YOLO/issues) to see if a similar bug already exists.
+      options:
+        - label: >
+            I have searched the DAMO-YOLO [issues](https://github.com/tinyvision/DAMO-YOLO/issues) and found no similar bugs.
+            我已经在[issue列表](https://github.com/tinyvision/DAMO-YOLO/issues)中搜索但是没有发现类似的bug报告。
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your attention. We will try our best to solve the bug you reported, but more concrete information is necessary to reproduce the bug.
+
+  - type: markdown
+    attributes:
+      value: "## Environment Information-环境信息"
+
+  - type: input
+    attributes:
+      label: OS
+      description: e.g. Ubuntu, Windows, etc.
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Device
+      description: e.g. CPU, Nvidia V100, etc.
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: CUDA version
+      description: e.g. 10.2, 11.6, etc. Required when your device is a GPU.
+    validations:
+      required: false
+
+  - type: input
+    attributes:
+      label: TensorRT version
+      description: e.g. 7.2.1.6, etc. Required when the bug occurs during TensorRT inference.
+    validations:
+      required: false
+
+  - type: input
+    attributes:
+      label: Python version
+      description: e.g. 3.7, 3.9, etc.
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: PyTorch version
+      description: e.g. 1.7.0, 1.12.1, etc.
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: torchvision version
+      description: e.g. 0.8.0, 0.13.1, etc.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "## About Bug-Bug相关信息"
+
+  - type: textarea
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is. 请详细、清晰地描述这个bug是什么样的。
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: To Reproduce
+      description: Steps to reproduce the behavior. 请列举复现这个bug的步骤。
+      placeholder: |
+        1. Modify code '...'
+        2. Run command '...'
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Hyper-parameters/Configs
+      description: If applicable, add Hyper-parameters definitions or Config codes to help explain your problem. 如果可以，请提供超参数定义或者模型配置文件代码以帮助您阐述bug信息。
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Logs
+      description: If applicable, add log information to help explain your problem. 如果可以，请提供相关日志信息以帮助您阐述bug信息。
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem. 如果可以，请提供相关截图以帮助您阐述bug信息。
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Additional
+      description: Anything else you would like to share? 其他您想分享的信息。
