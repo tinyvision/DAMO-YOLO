@@ -96,13 +96,19 @@ def fuse_conv_and_bn(conv, bn):
 
 
 def fuse_model(model):
-    from damo.base_models.core.base_ops import BaseConv
+    from damo.base_models.core.ops import ConvBNAct
+    from damo.base_models.backbones.tinynas_res import ConvKXBN
 
     for m in model.modules():
-        if type(m) is BaseConv and hasattr(m, 'bn'):
+        if type(m) is ConvBNAct and hasattr(m, 'bn'):
             m.conv = fuse_conv_and_bn(m.conv, m.bn)  # update conv
             delattr(m, 'bn')  # remove batchnorm
             m.forward = m.fuseforward  # update forward
+        elif type(m) is ConvKXBN and hasattr(m, 'bn1'):
+            m.conv1 = fuse_conv_and_bn(m.conv1, m.bn1)  # update conv
+            delattr(m, 'bn1')  # remove batchnorm
+            m.forward = m.fuseforward  # update forward
+
     return model
 
 

@@ -20,6 +20,9 @@ class ConvKXBN(nn.Module):
     def forward(self, x):
         return self.bn1(self.conv1(x))
 
+    def fuseforward(self, x):
+        return self.conv1(x)
+
 
 class ConvKXBNRELU(nn.Module):
     def __init__(self, in_c, out_c, kernel_size, stride, act='silu'):

@@ -7,6 +7,7 @@ import os
 import torch
 from loguru import logger
 
+from damo.base_models.core.ops import RepConv
 from damo.apis.detector_inference import inference
 from damo.config.base import parse_config
 from damo.dataset import build_dataloader, build_dataset
@@ -111,6 +112,10 @@ def main():
         new_state_dict[k] = v
     model.load_state_dict(new_state_dict, strict=False)
     logger.info('loaded checkpoint done.')
+
+    for layer in model.modules():
+        if isinstance(layer, RepConv):
+            layer.switch_to_deploy()
 
     if args.fuse:
         logger.info('\tFusing model...')
