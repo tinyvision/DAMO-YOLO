@@ -119,7 +119,7 @@ def random_affine(
 
     # Transform label coordinates
     n = len(targets)
-    if (n and segments is None) or (len(segments) != len(targets)):
+    if (n and len(segments)==0) or (len(segments) != len(targets)):
         new = np.zeros((n, 4))
 
         xy = np.ones((n * 4, 3))
@@ -270,8 +270,8 @@ class MosaicWrapper(torch.utils.data.dataset.Dataset):
                     segments = [
                         xyn2xy(x, scale, padw, padh) for x in _segments
                     ]
-                    mosaic_labels.append(labels)
                     mosaic_segments.extend(segments)
+                    mosaic_labels.append(labels)
 
                 if len(mosaic_labels):
                     mosaic_labels = np.concatenate(mosaic_labels, 0)
@@ -291,6 +291,7 @@ class MosaicWrapper(torch.utils.data.dataset.Dataset):
                             0,
                             2 * input_h,
                             out=mosaic_labels[:, 3])
+
                 if len(mosaic_segments):
                     assert input_w == input_h
                     for x in mosaic_segments:

@@ -13,7 +13,7 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
   * Release model convert tools for easy deployment, supports onnx and TensorRT-fp32, TensorRT-fp16.
 
 ## Web Demo
-- [DAMO-YOLO-S](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo/summary) is integrated into ModelScope. Try out the Web Demo.
+- [DAMO-YOLO-T](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo-t/summary), [DAMO-YOLO-S](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo/summary), [DAMO-YOLO-M](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo-m/summary)is integrated into ModelScope. Try out the Web Demo.
 
 ## Model Zoo
 |Model |size |mAP<sup>val<br>0.5:0.95 | Latency T4<br>TRT-FP16-BS1| FLOPs<br>(G)| Params<br>(M)| Download |

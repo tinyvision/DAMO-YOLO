@@ -28,7 +28,7 @@ def build_transforms(start_epoch,
     if autoaug_dict is not None:
         transform += [
             SA_Aug(iters_per_epoch, start_epoch, total_epochs, no_aug_epochs,
-                   batch_size, num_workers, num_gpus, autoaug_dict)
+                   batch_size, num_gpus, num_workers, autoaug_dict)
         ]
 
     transform = T.Compose(transform)

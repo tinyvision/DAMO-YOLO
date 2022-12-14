@@ -11,6 +11,7 @@ from ..core.weight_init import bias_init_with_prob, normal_init
 from ..losses.gfocal_loss import (DistributionFocalLoss, GIoULoss,
                                   QualityFocalLoss)
 
+from loguru import logger
 
 def distance2bbox(points, distance, max_shape=None):
     """Decode distance prediction to bounding box.
@@ -377,10 +378,11 @@ class ZeroHead(nn.Module):
         pos_inds = torch.nonzero((labels >= 0) & (labels < self.num_classes),
                                  as_tuple=False).squeeze(1)
 
+        weight_targets = cls_scores.detach()
+        weight_targets = weight_targets.max(dim=1)[0][pos_inds]
+        norm_factor = max(reduce_mean(weight_targets.sum()).item(), 1.0)
+
         if len(pos_inds) > 0:
-            weight_targets = cls_scores.detach()
-            weight_targets = weight_targets.max(dim=1)[0][pos_inds]
-            norm_factor = max(reduce_mean(weight_targets.sum()).item(), 1.0)
             loss_bbox = self.loss_bbox(
                 decoded_bboxes[pos_inds],
                 bbox_targets[pos_inds],
@@ -393,10 +395,10 @@ class ZeroHead(nn.Module):
                 weight=weight_targets[:, None].expand(-1, 4).reshape(-1),
                 avg_factor=4.0 * norm_factor,
             )
-
         else:
-            loss_bbox = bbox_preds.sum() * 0.0
-            loss_dfl = bbox_preds.sum() * 0.0
+            loss_bbox = bbox_preds.sum() / norm_factor * 0.0
+            loss_dfl = bbox_preds.sum() / norm_factor * 0.0
+            logger.info(f'No Positive Samples on {bbox_preds.device}! May cause performance decrease. loss_bbox:{loss_bbox:.3f}, loss_dfl:{loss_dfl:.3f}, loss_qfl:{loss_qfl:.3f} ')
 
         total_loss = loss_qfl + loss_bbox + loss_dfl
 

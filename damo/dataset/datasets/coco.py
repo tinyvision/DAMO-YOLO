@@ -74,25 +74,24 @@ class COCODataset(CocoDetection):
 
         classes = [obj['category_id'] for obj in anno]
         classes = [self.json_category_id_to_contiguous_id[c] for c in classes]
-        # seg_masks = [obj["segmentation"] for obj in anno]
 
-        whole_obj_masks = []
+        obj_masks = []
         for obj in anno:
-            whole_mask = []
-            for mask in obj['segmentation']:
-                whole_mask += mask
-            whole_obj_masks.append(whole_mask)
-
+            obj_mask = []
+            if 'segmentation' in obj:
+                for mask in obj['segmentation']:
+                    obj_mask += mask
+                obj_masks.append(obj_mask)
         seg_masks = [
-            np.array(mask, dtype=np.float32).reshape(-1, 2)
-            for mask in whole_obj_masks
+            np.array(obj_mask, dtype=np.float32).reshape(-1, 2)
+            for obj_mask in obj_masks
         ]
+
         res = np.zeros((len(target.bbox), 5))
         for idx in range(len(target.bbox)):
             res[idx, 0:4] = target.bbox[idx]
             res[idx, 4] = classes[idx]
 
-        # PIL to opencv
         img = np.asarray(img)  # rgb
 
         return img, res, seg_masks, idx
