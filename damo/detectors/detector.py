@@ -2,6 +2,7 @@
 
 import torch
 import torch.nn as nn
+from loguru import logger
 from torch.nn.parallel import DistributedDataParallel as DDP
 
 from damo.base_models.backbones import build_backbone
@@ -38,7 +39,7 @@ class Detector(nn.Module):
     def load_pretrain_detector(self, pretrain_model):
 
         state_dict = torch.load(pretrain_model, map_location='cpu')['model']
-        print(f'load params from {pretrain_model}................')
+        logger.info(f'Finetune from {pretrain_model}................')
         new_state_dict = {}
         for k, v in self.state_dict().items():
             k = k.replace('module.', '')
@@ -47,7 +48,7 @@ class Detector(nn.Module):
                 continue
             new_state_dict[k] = state_dict[k]
 
-        self.load_state_dict(new_state_dict)
+        self.load_state_dict(new_state_dict, strict=True)
 
     def forward(self, x, targets=None, tea=False, stu=False):
         images = to_image_list(x)

@@ -133,8 +133,7 @@ class Trainer:
                                               cfg.train.weight_decay)
         # resume model
         if self.cfg.train.finetune_path is not None:
-            _ = self.resume_model(self.cfg.train.finetune_path,
-                                  load_optimizer=False)
+            self.model.load_pretrain_detector(self.cfg.train.finetune_path)
             self.epoch = 0
             self.start_epoch = 0
         elif self.cfg.train.resume_path is not None:

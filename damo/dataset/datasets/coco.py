@@ -81,7 +81,8 @@ class COCODataset(CocoDetection):
             if 'segmentation' in obj:
                 for mask in obj['segmentation']:
                     obj_mask += mask
-                obj_masks.append(obj_mask)
+                if len(obj_mask) > 0:
+                    obj_masks.append(obj_mask)
         seg_masks = [
             np.array(obj_mask, dtype=np.float32).reshape(-1, 2)
             for obj_mask in obj_masks

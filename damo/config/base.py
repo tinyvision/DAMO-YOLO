@@ -81,7 +81,7 @@ class Config(metaclass=ABCMeta):
                 args=args,
             )
         else:
-            raise RuntimeError('Dataset not available: {}'.format(name))
+            raise RuntimeError('Only support coco format dataset now!')
 
     def __repr__(self):
         table_header = ['keys', 'values']
