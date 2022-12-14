@@ -197,6 +197,6 @@ if __name__ == '__main__':
 
     output_folder = os.path.join(config.miscs.output_dir, 'trt_out')
     mkdir(output_folder)
-    output_path = os.path.join(output_folder, args.path.split('/')[-1])
+    output_path = os.path.join(output_folder, os.path.split(args.path)[-1])
     logger.info('saved trt inference result into {}'.format(output_path))
     cv2.imwrite(output_path, out_img[:, :, ::-1])

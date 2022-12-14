@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # Copyright (C) Alibaba Group Holding Limited. All rights reserved.
 import argparse
+import os
 
 import onnx
 import torch
@@ -122,7 +123,7 @@ def main():
     args = make_parser().parse_args()
 
     logger.info('args value: {}'.format(args))
-    onnx_name = args.config_file.split('/')[-1].replace('.py', '.onnx')
+    onnx_name = os.path.split(args.config_file)[-1].replace('.py', '.onnx')
 
     if args.end2end:
         onnx_name = onnx_name.replace('.onnx', '_end2end.onnx')
