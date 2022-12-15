@@ -8,6 +8,8 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
 <div align="center"><img src="assets/curve.png" width="500"></div>
 
 ## Updates
+- **[2022/12/15: We release  DAMO-YOLO v0.1.1!]**
+  * Add a detailed [Custom Dataset Finetune Tutorial](./assets/CustomDatasetTutorial.md).
 - **[2022/11/27: We release  DAMO-YOLO v0.1.0!]**
   * Release DAMO-YOLO object detection models, including DAMO-YOLO-T, DAMO-YOLO-S and DAMO-YOLO-M.
   * Release model convert tools for easy deployment, supports onnx and TensorRT-fp32, TensorRT-fp16.
@@ -87,23 +89,7 @@ python -m torch.distributed.launch --nproc_per_node=8 tools/train.py -f configs/
 <details>
 <summary>Finetune on your data</summary>
 
-Step1. Prepare your customize data in COCO format, and make sure the dataset name ends with coco. The dataset structure should be organized as follows:
-```
-├── Custom_coco
-│   ├── annotations
-│   │   ├── instances_train2017.json
-│   │   └── instances_val2017.json
-│   ├── train2017
-│   ├── val2017
-│   ├── LICENSE
-│   ├── README.txt
-```
-Step2. Add the data directoy into damo/config/paths_catalog.py. Customize your config file based on default configs, e.g., damoyolo_TinynasL25_S.py. Don't forget to add pretrained model by config.train.finetune_path='./damoyolo_TinynasL25_S.pth' and specify the learning_rate/training_epochs/datasets and other hyperparameters according to your data.
-
-Step3. Start finetuning:
-```shell
-python -m torch.distributed.launch --nproc_per_node=8 tools/train.py -f configs/damoyolo_tinynasL25_S_finetune.py
-``` 
+Please refer to [custom dataset tutorial](./assets/CustomDatasetTutorial.md) for details.
 
 </details>
 

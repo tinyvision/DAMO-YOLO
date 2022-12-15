@@ -8,6 +8,8 @@
 <div align="center"><img src="assets/curve.png" width="500"></div>
 
 ## 更新日志
+-  **[2022/11/27: DAMO-YOLO v0.1.1更新!]**
+    * 增加详细的[自有数据微调模型教程](./assets/CustomDatasetTutorial.md)。
 -  **[2022/11/27: DAMO-YOLO v0.1.0开源!]**
     * 开源DAMO-YOLO-T, DAMO-YOLO-S和DAMO-YOLO-M模型。
     * 开源模型导出工具，支持onnx导出以及TensorRT-fp32、TensorRT-fp16模型导出。
@@ -86,23 +88,8 @@ python -m torch.distributed.launch --nproc_per_node=8 tools/train.py -f configs/
 <details>
 <summary>在自定义数据上微调模型</summary>
 
-Step1. 将您的自定义数据转换成COCO格式，并且将数据集路径添加到damo/config/paths_catalog.py，确保您的自定义数据集名称以"coco"结尾。数据的目录组织结构如下: 
-```
-├── Custom_coco
-│   ├── annotations
-│   │   ├── instances_train2017.json
-│   │   └── instances_val2017.json
-│   ├── train2017
-│   ├── val2017
-│   ├── LICENSE
-│   ├── README.txt
-```
-Step2. 在配置文件中加入预训练模型路径，例如: config.train.finetune_path='./damoyolo_tinynasL25_S.pth'，最后根据您的自定义数据的数据量和数据特点，修改配置文件中的learning_rate/training epochs/datasets和其他必要超参。 
+请参考[自有数据微调模型教程](./assets/CustomDatasetTutorial.md)。
 
-Step3. 开始微调训练:
-```shell
-python -m torch.distributed.launch --nproc_per_node=8 tools/train.py -f configs/damoyolo_tinynasL25_S_finetune.py
-``` 
 </details>
 
 
