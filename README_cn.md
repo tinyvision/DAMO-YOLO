@@ -3,13 +3,14 @@
 <div align="center"><img src="assets/logo.png" width="1500"></div>
 
 ## 简介
-欢迎来到**DAMO-YOLO**！DAMO-YOLO是由阿里巴巴达摩院智能计算实验室TinyML团队开发的一个兼顾速度与精度的目标检测框架,其效果超越了目前的一众YOLO系列方法，在实现SOTA的同时，保持了很高的推理速度。DAMO-YOLO是在YOLO框架基础上引入了一系列新技术，对整个检测框架进行了大幅的修改。具体包括：基于NAS搜索的高效检测骨干网络，更深的多尺度特征融合检测颈部，精简的检测头结构，以及引入蒸馏技术实现效果的进一步提升。具体细节可以参考我们的[技术报告](https://arxiv.org/abs/2211.15444)。模型之外，DAMO-YOLO还提供高效的训练策略以及便捷易用的部署工具，帮助您快速解决工业落地中的实际问题！
+欢迎来到**DAMO-YOLO**！DAMO-YOLO是由阿里巴巴达摩院智能计算实验室TinyML团队开发的一个兼顾速度与精度的目标检测框架,其效果超越了目前的一众YOLO系列方法，在实现SOTA的同时，保持了很高的推理速度。DAMO-YOLO是在YOLO框架基础上引入了一系列新技术，对整个检测框架进行了大幅的修改。具体包括：基于NAS搜索的高效检测骨干网络，更深的多尺度特征融合检测颈部，精简的检测头结构，以及引入蒸馏技术实现效果的进一步提升。具体细节可以参考我们的[技术报告](https://arxiv.org/pdf/2211.15444v2.pdf)。模型之外，DAMO-YOLO还提供高效的训练策略以及便捷易用的部署工具，帮助您快速解决工业落地中的实际问题！
 
 <div align="center"><img src="assets/curve.png" width="500"></div>
 
 ## 更新日志
 -  **[2022/11/27: DAMO-YOLO v0.1.1更新!]**
     * 增加详细的[自有数据微调模型教程](./assets/CustomDatasetTutorial.md)。
+    * 修复了空标签数据导致训练卡住的问题[issue #30](https://github.com/tinyvision/DAMO-YOLO/issues/30)，如您使用中遇到任何问题，欢迎随时反馈，我们24小时待命。
 -  **[2022/11/27: DAMO-YOLO v0.1.0开源!]**
     * 开源DAMO-YOLO-T, DAMO-YOLO-S和DAMO-YOLO-M模型。
     * 开源模型导出工具，支持onnx导出以及TensorRT-fp32、TensorRT-fp16模型导出。
@@ -49,8 +50,9 @@ export PYTHONPATH=$PWD:$PYTHONPATH
 步骤二. 安装[pycocotools](https://github.com/cocodataset/cocoapi).
 
 ```shell
-pip3 install cython;
-pip3 install 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI'
+pip install cython;
+pip install git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI # for Linux
+pip install git+https://github.com/philferriere/cocoapi.git#subdirectory=PythonAPI # for Windows
 ```
 </details>
 
@@ -198,7 +200,7 @@ python tools/trt_inference.py -f configs/damoyolo_tinynasL25_s.py -t deploy/damo
  @article{damoyolo,
    title={DAMO-YOLO: A Report on Real-Time Object Detection Design},
    author={Xianzhe Xu, Yiqi Jiang, Weihua Chen, Yilun Huang, Yuan Zhang and Xiuyu Sun},
-   journal={arXiv preprint arXiv:2211.15444},
+   journal={arXiv preprint arXiv:2211.15444v2},
    year={2022},
  }
 ```

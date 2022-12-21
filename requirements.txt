@@ -7,6 +7,5 @@ scikit-image
 tqdm
 Pillow
 thop
-ninja
 tabulate
 easydict
