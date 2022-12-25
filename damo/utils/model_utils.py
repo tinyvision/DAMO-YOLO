@@ -22,7 +22,8 @@ def get_latency(model, inp, iters=500, warmup=2):
     start = time.time()
     for i in range(iters):
         out = model(inp)
-        torch.cuda.synchronize()
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
         if i <= warmup:
             start = time.time()
     latency = (time.time() - start) / (iters - warmup)
