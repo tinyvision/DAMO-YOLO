@@ -81,8 +81,8 @@ def main():
 
     ckpt_file = args.ckpt
     logger.info('loading checkpoint from {}'.format(ckpt_file))
-    loc = 'cuda:{}'.format(0)
-    ckpt = torch.load(ckpt_file, map_location=loc)
+
+    ckpt = torch.load(ckpt_file, map_location=device)
     new_state_dict = {}
     for k, v in ckpt['model'].items():
         new_state_dict[k] = v
