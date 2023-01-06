@@ -8,6 +8,11 @@
 <div align="center"><img src="assets/curve.png" width="500"></div>
 
 ## 更新日志
+- **[2023/01/07: DAMO-YOLO v0.2.1更新!]**
+    * 增加[TensorRT Int8部分量化教程](./tools/partial_quantization/README.md)，实现19%提速仅损失0.3%精度。
+    * 增加[通用demo工具](#快速上手)，支持TensorRT/Onnx/Torch引擎实现vidoe/image推理。
+    * 基于ModelScope增加[工业应用模型](#industry-application-models)，包括[人体检测](https://www.modelscope.cn/models/damo/cv_tinynas_human-detection_damoyolo/summary), [安全帽检测](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_safety-helmet/summary)，[口罩检测](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_facemask/summary)和[香烟检测](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_cigarette/summary)。
+    * 增加[第三方资源](#第三方资源)板块，收集汇总第三方内容，目前包括[DAMO-YOLO代码解读](https://blog.csdn.net/jyyqqq/article/details/128419143), [DAMO-YOLO自有数据训练范例](https://blog.csdn.net/Cwhgn/article/details/128447380?spm=1001.2014.3001.5501)。 
 -  **[2022/11/27: DAMO-YOLO v0.1.1更新!]**
     * 增加详细的[自有数据微调模型教程](./assets/CustomDatasetTutorial.md)。
     * 修复了空标签数据导致训练卡住的问题[issue #30](https://github.com/tinyvision/DAMO-YOLO/issues/30)，如您使用中遇到任何问题，欢迎随时反馈，我们24小时待命。
@@ -165,6 +170,8 @@ pip install pycuda==2022.1
 <details>
 <summary>模型导出</summary>
 
+模型导出工具现支持TensorRT Int8量化，通过指定trt_type即可将模型导出为TensorRT Int8推理引擎。另外也可以参考[部分量化](./tools/partial_quantization/README.md)使用我们提供的部分量化工具来获得更好的性能与精度，
+
 步骤一：将torch模型导出成onnx或者TensorRT推理引擎。具体使用方法如下：
 ```shell
 # onnx 导出
@@ -190,6 +197,24 @@ python tools/onnx_inference.py -f configs/damoyolo_tinynasL25_S.py --onnx /path/
 python tools/trt_inference.py -f configs/damoyolo_tinynasL25_s.py -t deploy/damoyolo_tinynasL25_S_end2end_fp16_bs1.trt -p assets/dog.jpg --img_size 640 --end2end
 ```
 </details>
+
+## 工业应用模型:
+
+|[**人体检测**](https://www.modelscope.cn/models/damo/cv_tinynas_human-detection_damoyolo/summary)| [**安全帽检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_safety-helmet/summary)|
+| :---: | :---: |
+|<img src='./assets/applications/human_detection.png' height="256px" >| <img src='./assets/applications/helmet_detection.png' height="256px">|
+|[**口罩检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_facemask/summary) |[**香烟检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_cigarette/summary) | 
+|<img src='./assets/applications/facemask_detection.png' height="256px">| <img src='./assets/applications/cigarette_detection.png' height="256px">|
+
+
+## 第三方资源
+为了促进DAMO-YOLO用户间的交流，我们会定期收集汇总第三方资源到该板块，如果您有与DAMO-YOLO有关的原创内容，欢迎联系xianzhe.xxz@alibaba-inc.com。
+
+- DAMO-YOLO总览：[幻灯片](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/slides/DAMO-YOLO-Overview.pptx)，[视频](https://www.bilibili.com/video/BV1hW4y1g7za/?spm_id_from=333.337.search-card.all.click).
+- [DAMO-YOLO代码解读](https://blog.csdn.net/jyyqqq/article/details/128419143)
+- [DAMO-YOLO自有数据训练范例](https://blog.csdn.net/Cwhgn/article/details/128447380?spm=1001.2014.3001.5501)
+
+
 
 ## 实习生招聘
 我们正在招聘研究型实习生，如果您对目标检测/模型量化/神经网络搜索等方向有兴趣，敬请将简历投递到xiuyu.sxy@alibaba-inc.com。

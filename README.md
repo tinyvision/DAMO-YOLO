@@ -8,6 +8,11 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
 <div align="center"><img src="assets/curve.png" width="500"></div>
 
 ## Updates
+- **[2023/01/07: We release DAMO-YOLO v0.2.1!]**
+    * Add [TensorRT Int8 Quantization Tutorial](./tools/partial_quantization/README.md), achieves 19% speed up with only 0.3% accuracy loss.
+    * Add [general demo tools](#quick-start), support TensorRT/Onnx/Torch based vidoe/image inference.
+    * Add more [industry application models](#industry-application-models), including [human detection](https://www.modelscope.cn/models/damo/cv_tinynas_human-detection_damoyolo/summary), [helmet detection](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_safety-helmet/summary), [facemask detection](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_facemask/summary) and [cigarette detection](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_cigarette/summary).
+    * Add [third-party resources](#third-party-resources), including [DAMO-YOLO Code Interpretation](https://blog.csdn.net/jyyqqq/article/details/128419143), [Practical Example for Finetuning on Custom Dataset](https://blog.csdn.net/Cwhgn/article/details/128447380?spm=1001.2014.3001.5501). 
 - **[2022/12/15: We release  DAMO-YOLO v0.1.1!]**
   * Add a detailed [Custom Dataset Finetune Tutorial](./assets/CustomDatasetTutorial.md).
   * The stuck problem caused by no-label data (*e.g.*, [ISSUE#30](https://github.com/tinyvision/DAMO-YOLO/issues/30)) is solved. Feel free to contact us, we are 24h stand by.
@@ -165,6 +170,8 @@ pip install pycuda==2022.1
 <details>
 <summary>Model Convert</summary>
 
+Now we support trt_int8 quantization, you can specify trt_type as int8 to export the int8 tensorRT engine. You can also try partial quantization to achieve a good compromise between accuracy and latency. Refer to [partial_quantization](./tools/partial_quantization/README.md) for more details.
+
 Step.1 convert torch model to onnx or trt engine, and the output file would be generated in ./deploy. end2end means to export trt with nms. trt_eval means to evaluate the exported trt engine on coco_val dataset after the export compelete.
 ```shell
 # onnx export 
@@ -188,6 +195,23 @@ python tools/onnx_inference.py -f configs/damoyolo_tinynasL25_S.py --onnx /path/
 python tools/trt_inference.py -f configs/damoyolo_tinynasL25_S.py -t deploy/damoyolo_tinynasL25_S_end2end_fp16_bs1.trt -p assets/dog.jpg --img_size 640 --end2end
 ```
 </details>
+
+## Industry Application Models:
+
+|[**Human Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_human-detection_damoyolo/summary)| [**Helmet Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_safety-helmet/summary)|
+| :---: | :---: |
+|<img src='./assets/applications/human_detection.png' height="256px" >| <img src='./assets/applications/helmet_detection.png' height="256px">|
+|[**Facemask Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_facemask/summary) |[**Cigarette Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_cigarette/summary) | 
+|<img src='./assets/applications/facemask_detection.png' height="256px">| <img src='./assets/applications/cigarette_detection.png' height="256px">|
+
+
+
+## Third Party Resources
+In order to promote communication among DAMO-YOLO users, we collect third-party resources in this section. If you have original content about DAMO-YOLO, please feel free to contact us at xianzhe.xxz@alibaba-inc.com.
+
+- DAMO-YOLO Overview: [slides](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/slides/DAMO-YOLO-Overview-English.pptx), [videos](https://www.bilibili.com/video/BV1hW4y1g7za/?spm_id_from=333.337.search-card.all.click).
+- [DAMO-YOLO Code Interpretation](https://blog.csdn.net/jyyqqq/article/details/128419143)
+- [Practical Example for Finetuning on Custom Dataset](https://blog.csdn.net/Cwhgn/article/details/128447380?spm=1001.2014.3001.5501)
 
 ## Intern Recruitment
 We are recruiting research intern, if you are interested in object detection, model quantization or NAS, please send your resume to xiuyu.sxy@alibaba-inc.com  
