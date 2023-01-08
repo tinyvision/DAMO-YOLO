@@ -6,6 +6,8 @@ With partial quantization, we finally reached 46.5% with a loss of only 0.3% in 
 
 ## Prerequirements
 
+TRT Version: 8.4.1.5
+
 ```python
 pip install --extra-index-url=https://pypi.ngc.nvidia.com --trusted-host pypi.ngc.nvidia.com nvidia-pyindex
 pip install --extra-index-url=https://pypi.ngc.nvidia.com --trusted-host pypi.ngc.nvidia.com pytorch_quantization
@@ -31,7 +33,7 @@ trtexec --avgRuns=1000 --workspace=1024 --loadEngine=damoyolo_tinynasL25_S_parti
 
 | Model           | Size        | Precision        |mAP_val(0.5:0.95) | T4 Latency bs=1 (ms) |
 | :-------------- | ----------- | ----------- |:----------------------- | ---------------------------------------- |
-| [**DAMOYOLO-S-partial**] | 640 | INT8  | 46.5 | 3.33 |
-| [**DAMOYOLO-S**] | 640 | INT8  | 33.6 | 3.11 |
-| [**DAMOYOLO-S**] | 640  | FP16 | 46.8  | 3.83 |
+| [**DAMOYOLO-S-partial**](http://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/quant_model/damoyolo_tinynasL25_S_partial_quant_bs1.trt)| 640 | INT8  | 46.5 | 3.23 |
+| [**DAMOYOLO-INT8**](http://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/quant_model/damoyolo_tinynasL25_S_int8_bs1.trt) | 640 | INT8  | 33.6 | 3.08 |
+| [**DAMOYOLO-S-FP16**](http://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/quant_model/damoyolo_tinynasL25_S_fp16_bs1.trt) | 640  | FP16 | 46.8  | 3.83 |
 

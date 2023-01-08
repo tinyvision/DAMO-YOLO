@@ -78,10 +78,6 @@ def make_parser():
                         default=11,
                         type=int,
                         help='onnx opset version')
-    parser.add_argument('--trt-version',
-                        type=int,
-                        default=7,
-                        help='tensorrt version')
     parser.add_argument('--calib_weights',
                         type=str,
                         default=None,
@@ -99,13 +95,6 @@ def make_parser():
     parser.add_argument('--trt_eval',
                         action='store_true',
                         help='trt evaluation')
-    parser.add_argument('--with-preprocess',
-                        action='store_true',
-                        help='export bgr2rgb and normalize')
-    parser.add_argument('--topk-all',
-                        type=int,
-                        default=100,
-                        help='topk objects for every images')
     parser.add_argument('--iou-thres',
                         type=float,
                         default=0.65,
@@ -114,17 +103,9 @@ def make_parser():
                         type=float,
                         default=0.05,
                         help='conf threshold for NMS')
-    parser.add_argument('--quant-ratio',
-                        type=float,
-                        default=1.0,
-                        help='conf threshold for NMS')
     parser.add_argument('--device',
                         default='0',
                         help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
-    parser.add_argument('--calib-weights',
-                        type=str,
-                        default=None,
-                        help='calib weights')
     parser.add_argument(
         'opts',
         help='Modify config options using the command-line',
@@ -241,7 +222,7 @@ def main():
     backbone_inds = list(range(30))
     neck_inds = list(range(30,31)) + list(range(32,40)) + list(range(40,41)) + list(range(42, 49)) + list(range(50,51)) + list(range(52, 59)) + list(range(60, 61)) + list(range(62, 69)) + list(range(70, 71)) + list(range(72, 79))
     head_inds = list(range(80, 86))
-    all_inds = backbone_inds + head_inds
+    all_inds = backbone_inds + neck_inds + head_inds
 
     quantable_sensitivity = [all_ops[x] for x in all_inds]
     quantable_ops = [qops for qops in quantable_sensitivity]        
