@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (C) Alibaba Group Holding Limited. All rights reserved.
+import os
 import argparse
 import sys
 
@@ -13,7 +14,20 @@ from damo.base_models.core.ops import RepConv, SiLU
 from damo.config.base import parse_config
 from damo.detectors.detector import build_local_model
 from damo.utils.model_utils import get_model_info, replace_module
-from trt_eval import trt_inference
+from tools.trt_eval import trt_inference
+
+from tools.partial_quantization.utils import module_quant_enable, module_quant_disable, model_quant_disable
+from tools.partial_quantization.utils import quant_sensitivity_save, quant_sensitivity_load, init_calib_data_loader
+from tools.partial_quantization.ptq import do_ptq, load_ptq, partial_quant
+
+from pytorch_quantization import nn as quant_nn
+
+opt_concat_fusion_list = []
+
+
+def mkdir(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
 
 
 def make_parser():
@@ -68,6 +82,14 @@ def make_parser():
                         type=int,
                         default=7,
                         help='tensorrt version')
+    parser.add_argument('--calib_weights',
+                        type=str,
+                        default=None,
+                        help='calib weights')
+    parser.add_argument('--sensitivity_file',
+                        type=str,
+                        default=None,
+                        help='sensitivity file')
     parser.add_argument('--end2end',
                         action='store_true',
                         help='export end2end onnx')
@@ -92,9 +114,17 @@ def make_parser():
                         type=float,
                         default=0.05,
                         help='conf threshold for NMS')
+    parser.add_argument('--quant-ratio',
+                        type=float,
+                        default=1.0,
+                        help='conf threshold for NMS')
     parser.add_argument('--device',
                         default='0',
                         help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
+    parser.add_argument('--calib-weights',
+                        type=str,
+                        default=None,
+                        help='calib weights')
     parser.add_argument(
         'opts',
         help='Modify config options using the command-line',
@@ -105,21 +135,17 @@ def make_parser():
     return parser
 
 
+
 @logger.catch
-def trt_export(onnx_path, batch_size, inference_h, inference_w, trt_mode, calib_loader=None, calib_cache='./damoyolo_calibration.cache'):
+def trt_export(onnx_path, batch_size, inference_h, inference_w):
     import tensorrt as trt
 
-    if trt_mode == 'int8':
-        from calibrator import DataLoader, Calibrator
-        calib_loader = DataLoader(1, 999, 'datasets/coco/val2017', 640, 640)
-
     TRT_LOGGER = trt.Logger()
-    engine_path = onnx_path.replace('.onnx', f'_{trt_mode}_bs{batch_size}.trt')
+    engine_path = onnx_path.replace('.onnx', f'_bs{batch_size}.trt')
 
     EXPLICIT_BATCH = 1 << (int)(
         trt.NetworkDefinitionCreationFlag.EXPLICIT_BATCH)
     
-    logger.info(f'trt_{trt_mode} converting ...')
     with trt.Builder(TRT_LOGGER) as builder, \
         builder.create_network(EXPLICIT_BATCH) as network, \
         trt.OnnxParser(network, TRT_LOGGER) as parser:
@@ -132,28 +158,15 @@ def trt_export(onnx_path, batch_size, inference_h, inference_w, trt_mode, calib_
                 for error in range(parser.num_errors):
                     logger.info(parser.get_error(error))
 
-        # builder.max_workspace_size = 1 << 30
         builder.max_batch_size = batch_size
         logger.info('Building an engine.  This would take a while...')
         config = builder.create_builder_config()
         config.max_workspace_size = 2 << 30
         
-        if trt_mode == 'fp16':
-            assert (builder.platform_has_fast_fp16 == True), 'not support fp16'
-            # builder.fp16_mode = True
-            config.flags |= 1 << int(trt.BuilderFlag.FP16)
-            
-        if trt_mode == 'int8':
-            config.flags |= 1 << int(trt.BuilderFlag.INT8)
-            config.flags |= 1 << int(trt.BuilderFlag.FP16)
+        config.flags |= 1 << int(trt.BuilderFlag.INT8)
+        config.flags |= 1 << int(trt.BuilderFlag.FP16)
 
-        if calib_loader is not None:
-            config.int8_calibrator = Calibrator(calib_loader, calib_cache)
-            logger.info('Int8 calibation is enabled.')
-
-        config.set_tactic_sources(1 << int(trt.TacticSource.CUBLAS))
         engine = builder.build_engine(network, config)
-
         try:
             assert engine
         except AssertionError:
@@ -173,82 +186,90 @@ def trt_export(onnx_path, batch_size, inference_h, inference_w, trt_mode, calib_
 
 @logger.catch
 def main():
+    import pdb
+    pdb.set_trace()
+
     args = make_parser().parse_args()
 
     logger.info('args value: {}'.format(args))
-    onnx_name = args.config_file.split('/')[-1].replace('.py', '.onnx')
 
-    if args.end2end:
-        onnx_name = onnx_name.replace('.onnx', '_end2end.onnx')
-
+    onnx_name = args.config_file.split('/')[-1].replace('.py', '_partial_quant.onnx')
     # Check device
     cuda = args.device != 'cpu' and torch.cuda.is_available()
     device = torch.device(f'cuda:{args.device}' if cuda else 'cpu')
-    assert not (
-        device.type == 'cpu' and args.trt_type != 'fp32'
-    ), '{args.trt_type} only compatible with GPU export, i.e. use --device 0'
-    # init and load model
+
+    # init config
     config = parse_config(args.config_file)
     config.merge(args.opts)
-
     if args.batch_size is not None:
         config.test.batch_size = args.batch_size
 
     # build model
     model = build_local_model(config, 'cuda')
-    # load model paramerters
     ckpt = torch.load(args.ckpt, map_location='cpu')
-
     model.eval()
     if 'model' in ckpt:
         ckpt = ckpt['model']
     model.load_state_dict(ckpt, strict=False)
     logger.info('loading checkpoint done.')
-
     model = replace_module(model, nn.SiLU, SiLU)
-
     for layer in model.modules():
         if isinstance(layer, RepConv):
             layer.switch_to_deploy()
-
     info = get_model_info(model, (args.img_size, args.img_size))
     logger.info(info)
+
     # decouple postprocess
     model.head.nms = False
 
-    if args.end2end:
-        model = End2End(model,
-                        max_obj=args.topk_all,
-                        iou_thres=args.iou_thres,
-                        score_thres=args.conf_thres,
-                        device=device,
-                        ort=args.ort,
-                        trt_version=args.trt_version,
-                        with_preprocess=args.with_preprocess)
+    # 1. do post training quantization
+    if args.calib_weights is None:
+        calib_data_loader = init_calib_data_loader(config)
+        model_ptq = do_ptq(model, calib_data_loader, 1000, device)
+        torch.save({'model': model_ptq}, args.ckpt.replace('.pth', '_calib.pth'))
+    else:
+        model_ptq = load_ptq(model, args.calib_weights, device)
 
-    dummy_input = torch.randn(args.batch_size, 3, args.img_size,
-                              args.img_size).to('cuda')
-    _ = model(dummy_input)
+    # 2. load sensitivity data
+    all_ops = list()
+    for k, m in model_ptq.named_modules():
+        if isinstance(m, quant_nn.QuantConv2d) or \
+           isinstance(m, quant_nn.QuantConvTranspose2d) or \
+           isinstance(m, quant_nn.MaxPool2d):
+            all_ops.append((k))
+
+    backbone_inds = list(range(30))
+    neck_inds = list(range(30,31)) + list(range(32,40)) + list(range(40,41)) + list(range(42, 49)) + list(range(50,51)) + list(range(52, 59)) + list(range(60, 61)) + list(range(62, 69)) + list(range(70, 71)) + list(range(72, 79))
+    head_inds = list(range(80, 86))
+    all_inds = backbone_inds + head_inds
+
+    quantable_sensitivity = [all_ops[x] for x in all_inds]
+    quantable_ops = [qops for qops in quantable_sensitivity]        
+
+    # 3. only quantize ops in quantable_ops list
+    partial_quant(model_ptq, quantable_ops=quantable_ops)
+
+    # 4. concat amax fusion
+    for sub_fusion_list in opt_concat_fusion_list:
+        ops = [get_module(model_ptq, op_name) for op_name in sub_fusion_list]
+        concat_quant_amax_fuse(ops)
+
+    # 5. ONNX export
+    quant_nn.TensorQuantizer.use_fb_fake_quant = True
+    dummy_input = torch.randn(args.batch_size, 3, args.img_size, args.img_size).to(device)
+    _ = model_ptq(dummy_input)
     torch.onnx._export(
-        model,
+        model_ptq,
         dummy_input,
         onnx_name,
-        input_names=[args.input],
-        output_names=['num_dets', 'det_boxes', 'det_scores', 'det_classes']
-        if args.end2end else [args.output],
-        opset_version=args.opset,
+        verbose=False,
+        training=torch.onnx.TrainingMode.EVAL,
+        do_constant_folding=True,
+        input_names=['images'],
+        output_names=['output'],
+        opset_version=13,
     )
-    onnx_model = onnx.load(onnx_name)
-    # Fix output shape
-    if args.end2end and not args.ort:
-        shapes = [
-            args.batch_size, 1, args.batch_size, args.topk_all, 4,
-            args.batch_size, args.topk_all, args.batch_size, args.topk_all
-        ]
-        for i in onnx_model.graph.output:
-            for j in i.type.tensor_type.shape.dim:
-                j.dim_param = str(shapes.pop(0))
-
+    onnx_model = onnx.load(onnx_name)        # Fix output shape
     try:
         import onnxsim
         logger.info('Starting to simplify ONNX...')
@@ -258,9 +279,11 @@ def main():
         logger.info(f'simplify failed: {e}')
     onnx.save(onnx_model, onnx_name)
     logger.info('generated onnx model named {}'.format(onnx_name))
+
+    # 6. export trt
     if args.trt:
-        trt_name = trt_export(onnx_name, args.batch_size, args.img_size,
-                              args.img_size, args.trt_type)
+        trt_name = trt_export(onnx_name, args.batch_size, args.img_size, args.img_size)
+        # 7. trt eval
         if args.trt_eval:
             logger.info('start trt inference on coco validataion dataset')
             trt_inference(config, trt_name, args.img_size, args.batch_size,

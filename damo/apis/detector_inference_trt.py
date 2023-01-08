@@ -112,8 +112,8 @@ def compute_on_dataset(config,
                 bbox_preds = torch.Tensor(pred_out[1])
                 output = postprocess(cls_scores, bbox_preds,
                                      config.model.head.num_classes,
-                                     config.model.head.conf_threshold,
-                                     config.model.head.nms_iou_threshold,
+                                     config.model.head.nms_conf_thre,
+                                     config.model.head.nms_iou_thre,
                                      images)
 
             if timer:
