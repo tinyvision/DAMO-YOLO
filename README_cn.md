@@ -203,6 +203,7 @@ python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./deploy/dam
 </details>
 
 ## 工业应用模型:
+我们提供了一系列面向实际工业场景的DAMO-YOLO模型，欢迎试用。请保持持续关注，更多的重磅模型即将释出！
 
 |[**人体检测**](https://www.modelscope.cn/models/damo/cv_tinynas_human-detection_damoyolo/summary)| [**安全帽检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_safety-helmet/summary)|
 | :---: | :---: |
