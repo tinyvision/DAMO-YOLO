@@ -245,7 +245,7 @@ class Infer():
             save_path = os.path.join(self.output_dir, save_name)
             print(f"save visualization results at {save_path}")
             cv2.imwrite(save_path, vis_img[:, :, ::-1])
-        return vis_img[:, :, ::-1]
+        return vis_img
 
 
 def make_parser():
