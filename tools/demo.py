@@ -263,11 +263,10 @@ def make_parser():
                         default='./assets/dog.jpg',
                         type=str,
                         help='path to image or video')
-    parser.add_argument('-c',
-                        '--ckpt',
+    parser.add_argument('--engine',
                         default=None,
                         type=str,
-                        help='ckpt for inference')
+                        help='engine for inference')
     parser.add_argument('--device',
                         default='cuda',
                         type=str,
@@ -306,7 +305,7 @@ def main():
     config = parse_config(args.config_file)
 
     infer_engine = Infer(config, infer_size=args.infer_size, device=args.device,
-        engine_type=args.engine_type, output_dir=args.output_dir, ckpt=args.ckpt)
+        engine_type=args.engine_type, output_dir=args.output_dir, ckpt=args.engine)
     input_type = os.path.basename(args.path).split('.')[-1].lower()
 
     if input_type in IMAGES:

@@ -100,9 +100,9 @@ def demo_postprocess(outputs, img_size, p6=False):
 
 
 def transform_img(origin_img, size_divisibility, image_max_range, flip_prob,
-                  image_mean, image_std):
+                  image_mean, image_std, infer_size=None):
     transform = [
-        T.Resize(image_max_range),
+        T.Resize(image_max_range, target_size=infer_size),
         T.RandomHorizontalFlip(flip_prob),
         T.ToTensor(),
         T.Normalize(mean=image_mean, std=image_std),

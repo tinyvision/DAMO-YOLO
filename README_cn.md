@@ -10,7 +10,7 @@
 ## 更新日志
 - **[2023/01/07: DAMO-YOLO v0.2.1更新!]**
     * 增加[TensorRT Int8部分量化教程](./tools/partial_quantization/README.md)，实现19%提速仅损失0.3%精度。
-    * 增加[通用demo工具](#快速上手)，支持TensorRT/Onnx/Torch引擎实现vidoe/image推理。
+    * 增加[通用demo工具](#快速上手)，支持TensorRT/Onnx/Torch引擎实现视频/图像推理。
     * 基于ModelScope增加[工业应用模型](#industry-application-models)，包括[人体检测](https://www.modelscope.cn/models/damo/cv_tinynas_human-detection_damoyolo/summary), [安全帽检测](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_safety-helmet/summary)，[口罩检测](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_facemask/summary)和[香烟检测](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_cigarette/summary)。
     * 增加[第三方资源](#第三方资源)板块，收集汇总第三方内容，目前包括[DAMO-YOLO代码解读](https://blog.csdn.net/jyyqqq/article/details/128419143), [DAMO-YOLO自有数据训练范例](https://blog.csdn.net/Cwhgn/article/details/128447380?spm=1001.2014.3001.5501)。 
 -  **[2022/11/27: DAMO-YOLO v0.1.1更新!]**
@@ -64,15 +64,19 @@ pip install git+https://github.com/philferriere/cocoapi.git#subdirectory=PythonA
 <details>
 <summary>Demo</summary>
 
-步骤一. 从模型库中下载训练好的torch模型或onnx推理引擎，例如damoyolo_tinynasL25_S.pth或damoyolo_tinynasL25_S.onnx
+步骤一. 从模型库中下载训练好的torch模型，onnx或tensorRt推理引擎，例如damoyolo_tinynasL25_S.pth，damoyolo_tinynasL25_S.onnx或damoyolo_tinynasL25_S.trt
 
-步骤二. 执行命令时用-f选项指定配置(config)文件。例如:
+步骤二. 执行命令时用-f选项指定配置(config)文件，--engine指定推理引擎，--engine_type指定推理引擎类型，--path指定推理输入数据（支持图片和视频）。具体命令如下:
 ```shell
 # torch 推理
-python tools/torch_inference.py -f configs/damoyolo_tinynasL25_S.py --ckpt /path/to/your/damoyolo_tinynasL25_S.pth --path assets/dog.jpg
+python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./damoyolo_tinynasL25_S.pth --engine_type onnx --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg
 
 # onnx 推理
-python tools/onnx_inference.py -f configs/damoyolo_tinynasL25_S.py --onnx /path/to/your/damoyolo_tinynasL25_S.onnx --path assets/dog.jpg
+python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./damoyolo_tinynasL25_S.onnx --engine_type onnx --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg
+
+# tensorRT 推理
+
+python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./damoyolo_tinynasL25_S.trt --engine_type tensorRT --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg
 ```
 
 </details>
@@ -182,19 +186,19 @@ python tools/converter.py -f configs/damoyolo_tinynasL25_S.py -c damoyolo_tinyna
 ```
 其中--end2end表示在导出的onnx或者TensorRT引擎中集成NMS模块，--trt_eval表示在TensorRT导出完成后即在coco2017 val上进行精度验证。
 
-已经完成TensorRT导出的模型也可由如下指令在coco2017 val上进行精度验证。--end2end表示待测试的TensorRT引擎包含NMS组件。
+步骤二：已经完成TensorRT导出的模型也可由如下指令在coco2017 val上进行精度验证。--end2end表示待测试的TensorRT引擎包含NMS组件。
 
 ```shell
 python tools/trt_eval.py -f configs/damoyolo_tinynasL25_S.py -trt deploy/damoyolo_tinynasL25_S_end2end.trt --batch_size 1 --img_size 640 --end2end
 ```
 
-步骤二：使用已经导出的onnx或TensorRT引擎进行目标检测。
+步骤三：使用已经导出的onnx或TensorRT引擎进行目标检测。
 ```shell
 # onnx 推理
-python tools/onnx_inference.py -f configs/damoyolo_tinynasL25_S.py --onnx /path/to/your/damoyolo_tinynasL25_S.onnx --path assets/dog.jpg
+python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./damoyolo_tinynasL25_S.onnx --engine_type onnx --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg
 
 # trt 推理
-python tools/trt_inference.py -f configs/damoyolo_tinynasL25_s.py -t deploy/damoyolo_tinynasL25_S_end2end_fp16_bs1.trt -p assets/dog.jpg --img_size 640 --end2end
+python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./deploy/damoyolo_tinynasL25_S_end2end_fp16_bs1.trt --engine_type tensorRT --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg --end2end
 ```
 </details>
 

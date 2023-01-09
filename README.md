@@ -64,15 +64,18 @@ pip install git+https://github.com/philferriere/cocoapi.git#subdirectory=PythonA
 <details>
 <summary>Demo</summary>
 
-Step1. Download a pretrained torch model or onnx engine from the benchmark table, e.g., damoyolo_tinynasL25_S.pth or damoyolo_tinynasL25_S.onnx.
+Step1. Download a pretrained torch, onnx or tensorRT engine from the benchmark table, e.g., damoyolo_tinynasL25_S.pth, damoyolo_tinynasL25_S.onnx, damoyolo_tinynasL25_S.trt.
 
-Step2. Use -f(config filename) to specify your detector's config. For example:
+Step2. Use -f(config filename) to specify your detector's config, --path to specify input data path, image or video are supported. For example:
 ```shell
 # torch
-python tools/torch_inference.py -f configs/damoyolo_tinynasL25_S.py --ckpt /path/to/your/damoyolo_tinynasL25_S.pth --path assets/dog.jpg
+python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./damoyolo_tinynasL25_S.pth --engine_type onnx --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg
 
 # onnx
-python tools/onnx_inference.py -f configs/damoyolo_tinynasL25_S.py --onnx /path/to/your/damoyolo_tinynasL25_S.onnx --path assets/dog.jpg
+python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./damoyolo_tinynasL25_S.onnx --engine_type onnx --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg
+
+# tensorRT
+python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./damoyolo_tinynasL25_S.trt --engine_type tensorRT --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg
 ```
 
 </details>
@@ -183,16 +186,16 @@ python tools/converter.py -f configs/damoyolo_tinynasL25_S.py -c damoyolo_tinyna
 
 Step.2 trt engine evaluation on coco_val dataset. end2end means to using trt_with_nms to evaluation.
 ```shell
-python tools/trt_eval.py -f configs/damoyolo_tinynasL25_S.py -trt deploy/damoyolo_tinynasL25_S_end2end.trt --batch_size 1 --img_size 640 --end2end
+python tools/trt_eval.py -f configs/damoyolo_tinynasL25_S.py -trt deploy/damoyolo_tinynasL25_S_end2end_fp16_bs1.trt --batch_size 1 --img_size 640 --end2end
 ```
 
-Step.3 onnx or trt engine inference demo and appoint test image by -p. end2end means to using trt_with_nms to inference.
+Step.3 onnx or trt engine inference demo and appoint test image/video by --path. end2end means to using trt_with_nms to inference.
 ```shell
 # onnx inference
-python tools/onnx_inference.py -f configs/damoyolo_tinynasL25_S.py --onnx /path/to/your/damoyolo_tinynasL25_S.onnx --path assets/dog.jpg
+python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./damoyolo_tinynasL25_S.onnx --engine_type onnx --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg
 
 # trt inference
-python tools/trt_inference.py -f configs/damoyolo_tinynasL25_S.py -t deploy/damoyolo_tinynasL25_S_end2end_fp16_bs1.trt -p assets/dog.jpg --img_size 640 --end2end
+python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./deploy/damoyolo_tinynasL25_S_end2end_fp16_bs1.trt --engine_type tensorRT --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg --end2end
 ```
 </details>
 
@@ -209,7 +212,7 @@ python tools/trt_inference.py -f configs/damoyolo_tinynasL25_S.py -t deploy/damo
 ## Third Party Resources
 In order to promote communication among DAMO-YOLO users, we collect third-party resources in this section. If you have original content about DAMO-YOLO, please feel free to contact us at xianzhe.xxz@alibaba-inc.com.
 
-- DAMO-YOLO Overview: [slides](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/slides/DAMO-YOLO-Overview-English.pptx), [videos](https://www.bilibili.com/video/BV1hW4y1g7za/?spm_id_from=333.337.search-card.all.click).
+- DAMO-YOLO Overview: **slides**([中文](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/slides/DAMO-YOLO-Overview.pptx) [英文](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/slides/DAMO-YOLO-Overview-English.pptx)), **videos**([中文](https://www.bilibili.com/video/BV1hW4y1g7za/?spm_id_from=333.337.search-card.all.click) [英文]).
 - [DAMO-YOLO Code Interpretation](https://blog.csdn.net/jyyqqq/article/details/128419143)
 - [Practical Example for Finetuning on Custom Dataset](https://blog.csdn.net/Cwhgn/article/details/128447380?spm=1001.2014.3001.5501)
 
