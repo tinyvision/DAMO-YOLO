@@ -64,10 +64,6 @@ def make_parser():
                         default=11,
                         type=int,
                         help='onnx opset version')
-    parser.add_argument('--trt-version',
-                        type=int,
-                        default=7,
-                        help='tensorrt version')
     parser.add_argument('--end2end',
                         action='store_true',
                         help='export end2end onnx')
@@ -108,6 +104,7 @@ def make_parser():
 @logger.catch
 def trt_export(onnx_path, batch_size, inference_h, inference_w, trt_mode, calib_loader=None, calib_cache='./damoyolo_calibration.cache'):
     import tensorrt as trt
+    trt_version = int(trt.__version__[0])
 
     if trt_mode == 'int8':
         from calibrator import DataLoader, Calibrator
@@ -151,7 +148,8 @@ def trt_export(onnx_path, batch_size, inference_h, inference_w, trt_mode, calib_
             config.int8_calibrator = Calibrator(calib_loader, calib_cache)
             logger.info('Int8 calibation is enabled.')
 
-        config.set_tactic_sources(1 << int(trt.TacticSource.CUBLAS))
+        if trt_version >= 8:
+            config.set_tactic_sources(1 << int(trt.TacticSource.CUBLAS))
         engine = builder.build_engine(network, config)
 
         try:
@@ -217,13 +215,15 @@ def main():
     model.head.nms = False
 
     if args.end2end:
+        import tensorrt as trt
+        trt_version = int(trt.__version__[0])
         model = End2End(model,
                         max_obj=args.topk_all,
                         iou_thres=args.iou_thres,
                         score_thres=args.conf_thres,
                         device=device,
                         ort=args.ort,
-                        trt_version=args.trt_version,
+                        trt_version=trt_version,
                         with_preprocess=args.with_preprocess)
 
     dummy_input = torch.randn(args.batch_size, 3, args.img_size,
