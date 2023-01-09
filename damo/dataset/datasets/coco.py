@@ -47,9 +47,6 @@ class COCODataset(CocoDetection):
         classes = torch.tensor(classes)
         target.add_field('labels', classes)
 
-        if anno and 'keypoints' in anno[0]:
-            keypoints = [obj['keypoints'] for obj in anno]
-            target.add_field('keypoints', keypoints)
 
         target = target.clip_to_image(remove_empty=True)
 
