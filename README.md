@@ -200,7 +200,7 @@ python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./deploy/dam
 </details>
 
 ## Industry Application Models:
-We provide models for applications in real scenarios trained by DAMO-YOLO, which are listed as follows. More are comming, please stay tuned.
+We provide DAMO-YOLO models for applications in real scenarios, which are listed as follows. More powerful models are comming, please stay tuned.
 
 |[**Human Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_human-detection_damoyolo/summary)| [**Helmet Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_safety-helmet/summary)|
 | :---: | :---: |
