@@ -215,7 +215,7 @@ python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./deploy/dam
 ## 第三方资源
 为了促进DAMO-YOLO用户间的交流，我们会定期收集汇总第三方资源到该板块，如果您有与DAMO-YOLO有关的原创内容，欢迎联系xianzhe.xxz@alibaba-inc.com。
 
-- DAMO-YOLO总览：[幻灯片](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/slides/DAMO-YOLO-Overview.pptx)，[视频](https://www.bilibili.com/video/BV1hW4y1g7za/?spm_id_from=333.337.search-card.all.click).
+- DAMO-YOLO总览：[幻灯片](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/slides/DAMO-YOLO-Overview.pdf)，[视频](https://www.bilibili.com/video/BV1hW4y1g7za/?spm_id_from=333.337.search-card.all.click).
 - [DAMO-YOLO代码解读](https://blog.csdn.net/jyyqqq/article/details/128419143)
 - [DAMO-YOLO自有数据训练范例](https://blog.csdn.net/Cwhgn/article/details/128447380?spm=1001.2014.3001.5501)
 
