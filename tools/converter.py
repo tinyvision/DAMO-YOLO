@@ -13,7 +13,6 @@ from damo.base_models.core.ops import RepConv, SiLU
 from damo.config.base import parse_config
 from damo.detectors.detector import build_local_model
 from damo.utils.model_utils import get_model_info, replace_module
-from trt_eval import trt_inference
 
 
 def make_parser():
@@ -262,6 +261,7 @@ def main():
         trt_name = trt_export(onnx_name, args.batch_size, args.img_size,
                               args.img_size, args.trt_type)
         if args.trt_eval:
+            from trt_eval import trt_inference
             logger.info('start trt inference on coco validataion dataset')
             trt_inference(config, trt_name, args.img_size, args.batch_size,
                           args.conf_thres, args.iou_thres, args.end2end)

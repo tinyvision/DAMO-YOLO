@@ -199,8 +199,7 @@ class ZeroHead(nn.Module):
             gt_cls_list = []
             for label in labels:
                 gt_bbox_list.append(label.bbox)
-                gt_cls_list.append((label.get_field('labels') -
-                                    1).long())  # labels starts from 1
+                gt_cls_list.append((label.get_field('labels')).long()) 
 
         # prepare priors for label assignment and bbox decode
         mlvl_priors_list = [

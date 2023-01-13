@@ -56,6 +56,7 @@ dataset = easydict({
     'val_ann': ('coco_2017_val', ),
     'data_dir': None,
     'aspect_ratio_grouping': False,
+    'class_names': None,
 })
 
 

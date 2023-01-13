@@ -36,6 +36,5 @@ trtexec --avgRuns=1000 --workspace=1024 --loadEngine=damoyolo_tinynasL25_S_parti
 | Model           | Size        | Precision        |mAP_val(0.5:0.95) | T4 Latency bs=1 (ms) |
 | :-------------- | ----------- | ----------- |:----------------------- | ---------------------------------------- |
 | [**DAMOYOLO-S-partial**](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/quant_model/damoyolo_tinynasL25_S_partial_quant_bs1.trt)| 640 | INT8  | 46.5 | 3.23 |
-| [**DAMOYOLO-S-INT8**](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/quant_model/damoyolo_tinynasL25_S_int8_bs1.trt) | 640 | INT8  | 33.6 | 3.08 |
 | [**DAMOYOLO-S-FP16**](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/quant_model/damoyolo_tinynasL25_S_fp16_bs1.trt) | 640  | FP16 | 46.8  | 3.83 |
 

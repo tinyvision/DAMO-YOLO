@@ -26,6 +26,7 @@ def build_dataset(cfg, ann_files, is_train=True, mosaic_mixup=None):
         factory = getattr(D, data['factory'])
         args = data['args']
         args['transforms'] = None
+        args['class_names'] = cfg.dataset.class_names
         # make dataset from factory
         dataset = factory(**args)
 

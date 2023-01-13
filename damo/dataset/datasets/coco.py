@@ -11,19 +11,34 @@ cv2.setNumThreads(0)
 
 
 class COCODataset(CocoDetection):
-    def __init__(self, ann_file, root, transforms=None):
+    def __init__(self, ann_file, root, transforms=None, class_names=None):
         super(COCODataset, self).__init__(root, ann_file)
         # sort indices for reproducible results
         self.ids = sorted(self.ids)
 
-        self.json_category_id_to_contiguous_id = {
-            v: i + 1
-            for i, v in enumerate(self.coco.getCatIds())
+        assert (class_names is not None), 'plz provide class_names'
+
+        self.contiguous_class2id = {
+            class_name: i
+            for i, class_name in enumerate(class_names)
         }
-        self.contiguous_category_id_to_json_id = {
-            v: k
-            for k, v in self.json_category_id_to_contiguous_id.items()
+        self.contiguous_id2class = {
+            i: class_name
+            for i, class_name in enumerate(class_names)
         }
+
+        categories = self.coco.dataset['categories']
+        cat_names = [cat['name'] for cat in categories]
+        cat_ids = [cat['id'] for cat in categories]
+        self.ori_class2id = {
+            class_name: i
+            for class_name, i in zip(cat_names, cat_ids)
+        }
+        self.ori_id2class = {
+            i: class_name
+            for class_name, i in zip(cat_names, cat_ids)
+        }
+
         self.id_to_img_map = {k: v for k, v in enumerate(self.ids)}
         self._transforms = transforms
 
@@ -42,7 +57,8 @@ class COCODataset(CocoDetection):
         target = BoxList(boxes, img.size, mode='xywh').convert('xyxy')
 
         classes = [obj['category_id'] for obj in anno]
-        classes = [self.json_category_id_to_contiguous_id[c] for c in classes]
+        classes = [self.contiguous_class2id[self.ori_id2class[c]] 
+                   for c in classes]
 
         classes = torch.tensor(classes)
         target.add_field('labels', classes)
@@ -70,7 +86,8 @@ class COCODataset(CocoDetection):
         target = target.clip_to_image(remove_empty=True)
 
         classes = [obj['category_id'] for obj in anno]
-        classes = [self.json_category_id_to_contiguous_id[c] for c in classes]
+        classes = [self.contiguous_class2id[self.ori_id2class[c]] 
+                   for c in classes]
 
         obj_masks = []
         for obj in anno:
@@ -98,7 +115,8 @@ class COCODataset(CocoDetection):
         _, anno = super(COCODataset, self).__getitem__(idx)
         anno = [obj for obj in anno if obj['iscrowd'] == 0]
         classes = [obj['category_id'] for obj in anno]
-        classes = [self.json_category_id_to_contiguous_id[c] for c in classes]
+        classes = [self.contiguous_class2id[self.ori_id2class[c]] 
+                   for c in classes]
 
         return classes
 

@@ -148,7 +148,7 @@ def postprocess(cls_scores,
             boxlist = BoxList(res[:, :4], (img_w, img_h), mode='xyxy')
             boxlist.add_field('objectness', res[:, 4])
             boxlist.add_field('scores', res[:, 5])
-            boxlist.add_field('labels', res[:, 6] + 1)
+            boxlist.add_field('labels', res[:, 6])
         output[i] = boxlist
 
     return output

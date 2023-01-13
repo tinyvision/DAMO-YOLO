@@ -167,9 +167,6 @@ def trt_export(onnx_path, batch_size, inference_h, inference_w):
 
 @logger.catch
 def main():
-    import pdb
-    pdb.set_trace()
-
     args = make_parser().parse_args()
 
     logger.info('args value: {}'.format(args))

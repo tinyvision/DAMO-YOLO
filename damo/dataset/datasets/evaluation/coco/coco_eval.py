@@ -83,7 +83,7 @@ def prepare_for_coco_detection(predictions, dataset):
         labels = prediction.get_field('labels').tolist()
 
         mapped_labels = [
-            dataset.contiguous_category_id_to_json_id[i] for i in labels
+            dataset.ori_class2id[dataset.contiguous_id2class[i]] for i in labels
         ]
         coco_results.extend([{
             'image_id': original_id,
