@@ -34,8 +34,8 @@ class Infer():
         else:
             self.device = 'cpu'
 
-        if "class_name" in config.test:
-            self.class_names = config.test.class_name
+        if "class_names" in config.dataset:
+            self.class_names = config.dataset.class_names
         else:
             self.class_names = []
             for i in range(config.model.head.num_classes):

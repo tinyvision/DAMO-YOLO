@@ -69,7 +69,7 @@ pip install git+https://github.com/philferriere/cocoapi.git#subdirectory=PythonA
 步骤二. 执行命令时用-f选项指定配置(config)文件，--engine指定推理引擎，--engine_type指定推理引擎类型，--path指定推理输入数据（支持图片和视频）。具体命令如下:
 ```shell
 # torch 推理
-python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./damoyolo_tinynasL25_S.pth --engine_type onnx --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg
+python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./damoyolo_tinynasL25_S.pth --engine_type torch --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg
 
 # onnx 推理
 python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./damoyolo_tinynasL25_S.onnx --engine_type onnx --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg
