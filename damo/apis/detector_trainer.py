@@ -138,7 +138,7 @@ class Trainer:
             self.start_epoch = 0
         elif self.cfg.train.resume_path is not None:
             resume_epoch = self.resume_model(self.cfg.train.resume_path,
-                                             need_optimizer=True)
+                                             load_optimizer=True)
             self.epoch = resume_epoch
             self.start_epoch = resume_epoch
             logger.info('Resume Training from Epoch: {}'.format(self.epoch))

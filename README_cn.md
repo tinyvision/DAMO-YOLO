@@ -21,7 +21,7 @@
     * 开源模型导出工具，支持onnx导出以及TensorRT-fp32、TensorRT-fp16模型导出。
 
 ## 线上Demo
-- 线上Demo已整合至ModelScope，快去[DAMO-YOLO-T](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo-t/summary)，[DAMO-YOLO-S](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo/summary)，[DAMO-YOLO-M](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo-m/summary) 体验一下吧！
+- 线上Demo已整合至ModelScope，快去[DAMO-YOLO-T](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo-t/summary)，[DAMO-YOLO-S](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo/summary)，[DAMO-YOLO-M](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo-m/summary) 体验一下吧！**ModelScope正免费提供GPU资源，并已支持DAMO-YOLO训练，快去试试吧！**
 
 ## 模型库
 |Model |size |mAP<sup>val<br>0.5:0.95 | Latency T4<br>TRT-FP16-BS1| FLOPs<br>(G)| Params<br>(M)| Download |
