@@ -206,11 +206,11 @@ python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./deploy/dam
 ## 工业应用模型:
 我们提供了一系列面向实际工业场景的DAMO-YOLO模型，欢迎试用。请保持持续关注，更多的重磅模型即将释出！
 
-|[**人体检测**](https://www.modelscope.cn/models/damo/cv_tinynas_human-detection_damoyolo/summary)| [**安全帽检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_safety-helmet/summary)|
-| :---: | :---: |
-|<img src='./assets/applications/human_detection.png' height="256px" >| <img src='./assets/applications/helmet_detection.png' height="256px">|
-|[**口罩检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_facemask/summary) |[**香烟检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_cigarette/summary) | 
-|<img src='./assets/applications/facemask_detection.png' height="256px">| <img src='./assets/applications/cigarette_detection.png' height="256px">|
+|[**人体检测**](https://www.modelscope.cn/models/damo/cv_tinynas_human-detection_damoyolo/summary)| [**安全帽检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_safety-helmet/summary)|[**人头检测**](https://modelscope.cn/models/damo/cv_tinynas_head-detection_damoyolo/summary) | [**手机检测**](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_phone/summary)|
+| :---: | :---: |  :---: | :---: | 
+|<img src='./assets/applications/human_detection.png' height="256px" >| <img src='./assets/applications/helmet_detection.png' height="256px">| <img src='./assets/applications/head_detection.png' height="256px"> | <img src='./assets/applications/smartphone detection' height="256px">|
+|[**口罩检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_facemask/summary) |[**香烟检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_cigarette/summary) | [**交通标识检测**](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_traffic_sign/summary) | |
+|<img src='./assets/applications/facemask_detection.png' height="256px">| <img src='./assets/applications/cigarette_detection.png' height="256px">|<img src='./assets/applications/trafficsign_detection.png' height="256px"> | |
 
 
 ## 第三方资源
