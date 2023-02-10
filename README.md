@@ -205,9 +205,9 @@ We provide DAMO-YOLO models for applications in real scenarios, which are listed
 
 |[**Human Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_human-detection_damoyolo/summary)| [**Helmet Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_safety-helmet/summary)|[**Head Detection**](https://modelscope.cn/models/damo/cv_tinynas_head-detection_damoyolo/summary) | [**Smartphone Detectioin**](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_phone/summary)|
 | :---: | :---: |  :---: | :---: | 
-|<img src='./assets/applications/human_detection.png' height="256px" >| <img src='./assets/applications/helmet_detection.png' height="256px">|<img src='./assets/applications/head_detection.png' height="256px"> | <img src='./assets/applications/smartphone detection' height="256px">|
+|<img src='./assets/applications/human_detection.png' height="200px" >| <img src='./assets/applications/helmet_detection.png' height="200px">|<img src='./assets/applications/head_detection.png' height="200px"> | <img src='./assets/applications/smartphone_detection.png' height="200px">|
 |[**Facemask Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_facemask/summary) |[**Cigarette Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_cigarette/summary) |[**Traffic Sign Detection**](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_traffic_sign/summary) | |
-|<img src='./assets/applications/facemask_detection.png' height="256px">| <img src='./assets/applications/cigarette_detection.png' height="256px">|<img src='./assets/applications/trafficsign_detection.png' height="256px"> | |
+|<img src='./assets/applications/facemask_detection.png' height="200px">| <img src='./assets/applications/cigarette_detection.png' height="200px">|<img src='./assets/applications/trafficsign_detection.png' height="200px"> | |
 
 
 

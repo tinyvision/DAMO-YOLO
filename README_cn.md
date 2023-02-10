@@ -3,7 +3,7 @@
 <div align="center"><img src="assets/logo.png" width="1500"></div>
 
 ## 简介
-<div align="center"><img src="assets/intro.gif" width="1500"></div>
+<div align="center"><img src="assets/overview.gif" width="1500"></div>
 欢迎来到**DAMO-YOLO**！DAMO-YOLO是由阿里巴巴达摩院智能计算实验室TinyML团队开发的一个兼顾速度与精度的目标检测框架,其效果超越了目前的一众YOLO系列方法，在实现SOTA的同时，保持了很高的推理速度。DAMO-YOLO是在YOLO框架基础上引入了一系列新技术，对整个检测框架进行了大幅的修改。具体包括：基于NAS搜索的高效检测骨干网络，更深的多尺度特征融合检测颈部，精简的检测头结构，以及引入蒸馏技术实现效果的进一步提升。具体细节可以参考我们的[技术报告](https://arxiv.org/pdf/2211.15444v2.pdf)。模型之外，DAMO-YOLO还提供高效的训练策略以及便捷易用的部署工具，帮助您快速解决工业落地中的实际问题！
 
 <div align="center"><img src="assets/curve.png" width="500"></div>
@@ -208,9 +208,9 @@ python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./deploy/dam
 
 |[**人体检测**](https://www.modelscope.cn/models/damo/cv_tinynas_human-detection_damoyolo/summary)| [**安全帽检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_safety-helmet/summary)|[**人头检测**](https://modelscope.cn/models/damo/cv_tinynas_head-detection_damoyolo/summary) | [**手机检测**](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_phone/summary)|
 | :---: | :---: |  :---: | :---: | 
-|<img src='./assets/applications/human_detection.png' height="256px" >| <img src='./assets/applications/helmet_detection.png' height="256px">| <img src='./assets/applications/head_detection.png' height="256px"> | <img src='./assets/applications/smartphone detection' height="256px">|
+|<img src='./assets/applications/human_detection.png' height="200px" >| <img src='./assets/applications/helmet_detection.png' height="200px">| <img src='./assets/applications/head_detection.png' height="200px"> | <img src='./assets/applications/smartphone detection' height="200px">|
 |[**口罩检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_facemask/summary) |[**香烟检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_cigarette/summary) | [**交通标识检测**](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_traffic_sign/summary) | |
-|<img src='./assets/applications/facemask_detection.png' height="256px">| <img src='./assets/applications/cigarette_detection.png' height="256px">|<img src='./assets/applications/trafficsign_detection.png' height="256px"> | |
+|<img src='./assets/applications/facemask_detection.png' height="200px">| <img src='./assets/applications/cigarette_detection.png' height="200px">|<img src='./assets/applications/trafficsign_detection.png' height="200px"> | |
 
 
 ## 第三方资源
