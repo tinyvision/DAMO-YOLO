@@ -208,9 +208,9 @@ python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./deploy/dam
 
 |[**人体检测**](https://www.modelscope.cn/models/damo/cv_tinynas_human-detection_damoyolo/summary)| [**安全帽检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_safety-helmet/summary)|[**人头检测**](https://modelscope.cn/models/damo/cv_tinynas_head-detection_damoyolo/summary) | [**手机检测**](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_phone/summary)|
 | :---: | :---: |  :---: | :---: | 
-|<img src='./assets/applications/human_detection.png' height="200px" >| <img src='./assets/applications/helmet_detection.png' height="200px">| <img src='./assets/applications/head_detection.png' height="200px"> | <img src='./assets/applications/smartphone detection' height="200px">|
+|<img src='./assets/applications/human_detection.png' height="180px" >| <img src='./assets/applications/helmet_detection.png' height="180px">| <img src='./assets/applications/head_detection.png' height="180px"> | <img src='./assets/applications/smartphone_detection.png' height="180px">|
 |[**口罩检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_facemask/summary) |[**香烟检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_cigarette/summary) | [**交通标识检测**](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_traffic_sign/summary) | |
-|<img src='./assets/applications/facemask_detection.png' height="200px">| <img src='./assets/applications/cigarette_detection.png' height="200px">|<img src='./assets/applications/trafficsign_detection.png' height="200px"> | |
+|<img src='./assets/applications/facemask_detection.png' height="180px">| <img src='./assets/applications/cigarette_detection.png' height="180px">|<img src='./assets/applications/trafficsign_detection.png' height="180px"> | |
 
 
 ## 第三方资源

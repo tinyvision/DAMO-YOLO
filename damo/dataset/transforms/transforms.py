@@ -27,20 +27,22 @@ class Compose(object):
 
 
 class Resize(object):
-    def __init__(self, max_range, target_size=None):
+    def __init__(self, max_range, target_size=None, keep_ratio=True):
         if not isinstance(max_range, (list, tuple)):
             max_range = (max_range, )
         self.max_range = max_range
         self.target_size = target_size
+        self.keep_ratio = keep_ratio
 
     def get_size_ratio(self, image_size):
         if self.target_size is None:
             target_size = random.choice(self.max_range)
-        w, h = image_size
-        if self.target_size is None:
             t_w, t_h = target_size, target_size
         else:
             t_w, t_h = self.target_size[1], self.target_size[0]
+        if not self.keep_ratio:
+            return t_w, t_h
+        w, h = image_size
         r = min(t_w / w, t_h / h)
         o_w, o_h = int(w * r), int(h * r)
         return (o_w, o_h)
