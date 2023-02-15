@@ -4,11 +4,14 @@ English | [简体中文](README_cn.md)
 
 ## Introduction
 <div align="center"><img src="assets/overview.gif" width="1500"></div>
+
 Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, which is developed by TinyML Team from Alibaba DAMO Data Analytics and Intelligence Lab. And it achieves a higher performance than state-of-the-art YOLO series. DAMO-YOLO is extend from YOLO but with some new techs, including Neural Architecture Search (NAS) backbones, efficient Reparameterized Generalized-FPN (RepGFPN), a lightweight head with AlignedOTA label assignment, and distillation enhancement. For more details, please refer to our [Arxiv Report](https://arxiv.org/pdf/2211.15444v2.pdf). Moreover, here you can find not only powerful models, but also highly efficient training strategies and complete tools from training to deployment.
 
 <div align="center"><img src="assets/curve.png" width="500"></div>
 
 ## Updates
+- **[2023/02/15: Baseline for The 3rd Anti-UAV Challenge.]**
+    * Welcome to join [the 3rd Anti-UAV Challenge](https://anti-uav.github.io/Evaluate/) on CVPR2023. The Challenge provides baseline models trained by DAMO-YOLO, which can be found on [DamoYolo_Anti-UAV-23_S](https://modelscope.cn/models/damo/cv_tinynas_uav-detection_damoyolo/summary) and [DamoYolo_Anti-UAV-23_L](https://modelscope.cn/models/damo/cv_tinynas_uav-detection_damoyolo-l/summary).
 - **[2023/01/07: We release DAMO-YOLO v0.2.1!]**
     * Add [TensorRT Int8 Quantization Tutorial](./tools/partial_quantization/README.md), achieves 19% speed up with only 0.3% accuracy loss.
     * Add [general demo tools](#quick-start), support TensorRT/Onnx/Torch based vidoe/image inference.
@@ -205,9 +208,9 @@ We provide DAMO-YOLO models for applications in real scenarios, which are listed
 
 |[**Human Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_human-detection_damoyolo/summary)| [**Helmet Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_safety-helmet/summary)|[**Head Detection**](https://modelscope.cn/models/damo/cv_tinynas_head-detection_damoyolo/summary) | [**Smartphone Detectioin**](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_phone/summary)|
 | :---: | :---: |  :---: | :---: | 
-|<img src='./assets/applications/human_detection.png' height="180px" >| <img src='./assets/applications/helmet_detection.png' height="180px">|<img src='./assets/applications/head_detection.png' height="180px"> | <img src='./assets/applications/smartphone_detection.png' height="180px">|
+|<img src='./assets/applications/human_detection.png' height="10px" >| <img src='./assets/applications/helmet_detection.png' height="100px">|<img src='./assets/applications/head_detection.png' height="100px"> | <img src='./assets/applications/smartphone_detection.png' height="100px">|
 |[**Facemask Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_facemask/summary) |[**Cigarette Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_cigarette/summary) |[**Traffic Sign Detection**](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_traffic_sign/summary) | |
-|<img src='./assets/applications/facemask_detection.png' height="180px">| <img src='./assets/applications/cigarette_detection.png' height="180px">|<img src='./assets/applications/trafficsign_detection.png' height="180px"> | |
+|<img src='./assets/applications/facemask_detection.png' height="100px">| <img src='./assets/applications/cigarette_detection.png' height="100px">|<img src='./assets/applications/trafficsign_detection.png' height="100px"> | |
 
 
 
@@ -235,18 +238,18 @@ If you use DAMO-YOLO in your research, please cite our work by using the followi
 
  @inproceedings{sun2022mae,
    title={Mae-det: Revisiting maximum entropy principle in zero-shot nas for efficient object detection},
-     author={Sun, Zhenhong and Lin, Ming and Sun, Xiuyu and Tan, Zhiyu and Li, Hao and Jin, Rong},
-       booktitle={International Conference on Machine Learning},
-         pages={20810--20826},
-           year={2022},
-             organization={PMLR}
+   author={Sun, Zhenhong and Lin, Ming and Sun, Xiuyu and Tan, Zhiyu and Li, Hao and Jin, Rong},
+   booktitle={International Conference on Machine Learning},
+   pages={20810--20826},
+   year={2022},
+   organization={PMLR}
  }
 
  @inproceedings{tan2021giraffedet,
-  title={Giraffedet: A heavy-neck paradigm for object detection},
-    author={Tan, Zhiyu and Wang, Junyan and Sun, Xiuyu and Lin, Ming and Li, Hao and others},
-      booktitle={International Conference on Learning Representations},
-        year={2021}
+   title={Giraffedet: A heavy-neck paradigm for object detection},
+   author={Tan, Zhiyu and Wang, Junyan and Sun, Xiuyu and Lin, Ming and Li, Hao and others},
+   booktitle={International Conference on Learning Representations},
+   year={2021}
  }
 ```
 
