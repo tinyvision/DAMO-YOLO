@@ -16,10 +16,11 @@ def build_transforms(start_epoch,
                      flip_prob=0.5,
                      image_mean=[0, 0, 0],
                      image_std=[1., 1., 1.],
-                     autoaug_dict=None):
+                     autoaug_dict=None,
+                     keep_ratio=True):
 
     transform = [
-        T.Resize(image_max_range),
+        T.Resize(image_max_range, keep_ratio=keep_ratio),
         T.RandomHorizontalFlip(flip_prob),
         T.ToTensor(),
         T.Normalize(mean=image_mean, std=image_std),

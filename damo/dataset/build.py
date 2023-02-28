@@ -41,7 +41,8 @@ def build_dataset(cfg, ann_files, is_train=True, mosaic_mixup=None):
                                     translate=mosaic_mixup.translate,
                                     shear=mosaic_mixup.shear,
                                     mosaic_scale=mosaic_mixup.mosaic_scale,
-                                    mixup_scale=mosaic_mixup.mixup_scale)
+                                    mixup_scale=mosaic_mixup.mixup_scale,
+                                    keep_ratio=mosaic_mixup.keep_ratio)
 
         datasets.append(dataset)
 

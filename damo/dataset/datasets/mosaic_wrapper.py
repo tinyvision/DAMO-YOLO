@@ -12,11 +12,11 @@ from damo.structures.bounding_box import BoxList
 from damo.utils import adjust_box_anns, get_rank
 
 
-def xyn2xy(x, scale, padw=0, padh=0):
+def xyn2xy(x, scale_w, scale_h, padw=0, padh=0):
     # Convert normalized segments into pixel segments, shape (n,2)
     y = x.clone() if isinstance(x, torch.Tensor) else np.copy(x)
-    y[:, 0] = scale * x[:, 0] + padw  # top left x
-    y[:, 1] = scale * x[:, 1] + padh  # top left y
+    y[:, 0] = scale_w * x[:, 0] + padw  # top left x
+    y[:, 1] = scale_h * x[:, 1] + padh  # top left y
     return y
 
 
@@ -197,6 +197,7 @@ class MosaicWrapper(torch.utils.data.dataset.Dataset):
                  mosaic_scale=(0.1, 2.0),
                  mixup_scale=(0.5, 1.5),
                  shear=2.0,
+                 keep_ratio=True,
                  *args):
         super().__init__()
         self._dataset = dataset
@@ -209,6 +210,7 @@ class MosaicWrapper(torch.utils.data.dataset.Dataset):
         self.mixup_scale = mixup_scale
         self.mosaic_prob = mosaic_prob
         self.mixup_prob = mixup_prob
+        self.keep_ratio = keep_ratio
         self.local_rank = get_rank()
 
     def __len__(self):
@@ -242,8 +244,13 @@ class MosaicWrapper(torch.utils.data.dataset.Dataset):
                     img, _labels, _segments, img_id = self._dataset.pull_item(
                         index)
                     h0, w0 = img.shape[:2]  # orig hw
-                    scale = min(1. * input_h / h0, 1. * input_w / w0)
-                    img = cv2.resize(img, (int(w0 * scale), int(h0 * scale)),
+                    if not self.keep_ratio:
+                        scale_h, scale_w = 1. * input_h / h0, 1. * input_w / w0
+                    else:
+                        scale_h = min(1. * input_h / h0, 1. * input_w / w0)
+                        scale_w = scale_h
+
+                    img = cv2.resize(img, (int(w0 * scale_w), int(h0 * scale_h)),
                                      interpolation=cv2.INTER_LINEAR)
                     # generate output mosaic image
                     (h, w, c) = img.shape[:3]
@@ -263,12 +270,12 @@ class MosaicWrapper(torch.utils.data.dataset.Dataset):
                     labels = _labels.copy()
                     # Normalized xywh to pixel xyxy format
                     if _labels.size > 0:
-                        labels[:, 0] = scale * _labels[:, 0] + padw
-                        labels[:, 1] = scale * _labels[:, 1] + padh
-                        labels[:, 2] = scale * _labels[:, 2] + padw
-                        labels[:, 3] = scale * _labels[:, 3] + padh
+                        labels[:, 0] = scale_w * _labels[:, 0] + padw
+                        labels[:, 1] = scale_h * _labels[:, 1] + padh
+                        labels[:, 2] = scale_w * _labels[:, 2] + padw
+                        labels[:, 3] = scale_h * _labels[:, 3] + padh
                     segments = [
-                        xyn2xy(x, scale, padw, padh) for x in _segments
+                        xyn2xy(x, scale_w, scale_h, padw, padh) for x in _segments
                     ]
                     mosaic_segments.extend(segments)
                     mosaic_labels.append(labels)
