@@ -164,7 +164,7 @@ class Infer():
                             image_max_range=self.config.test.augment.transform['image_max_range'],
                             flip_prob=self.config.test.augment.transform['flip_prob'],
                             image_mean=self.config.test.augment.transform['image_mean'],
-                            image_std=self.config.test.augment.transform['image_std'])
+                            image_std=self.config.test.augment.transform['image_std'],
                             infer_size=self.infer_size)
         img = self._pad_image(img.tensors, self.infer_size)
         # img is a image_list
