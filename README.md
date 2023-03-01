@@ -245,11 +245,12 @@ If you use DAMO-YOLO in your research, please cite our work by using the followi
    organization={PMLR}
  }
 
- @inproceedings{tan2021giraffedet,
-   title={Giraffedet: A heavy-neck paradigm for object detection},
-   author={Tan, Zhiyu and Wang, Junyan and Sun, Xiuyu and Lin, Ming and Li, Hao and others},
-   booktitle={International Conference on Learning Representations},
-   year={2021}
- }
+@inproceedings{jiang2022giraffedet,
+  title={GiraffeDet: A Heavy-Neck Paradigm for Object Detection},
+  author={yiqi jiang and Zhiyu Tan and Junyan Wang and Xiuyu Sun and Ming Lin and Hao Li},
+  booktitle={International Conference on Learning Representations},
+  year={2022},
+  url={https://openreview.net/forum?id=cBu4ElJfneV}
+}
 ```
 

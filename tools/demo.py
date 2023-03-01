@@ -305,7 +305,7 @@ def main():
     config = parse_config(args.config_file)
 
     infer_engine = Infer(config, infer_size=args.infer_size, device=args.device,
-        engine_type=args.engine_type, output_dir=args.output_dir, ckpt=args.engine)
+        engine_type=args.engine_type, output_dir=args.output_dir, ckpt=args.engine, end2end=args.end2end)
     input_type = os.path.basename(args.path).split('.')[-1].lower()
 
     if input_type in IMAGES:

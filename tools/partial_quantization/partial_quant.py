@@ -82,6 +82,10 @@ def make_parser():
                         type=str,
                         default=None,
                         help='calib weights')
+    parser.add_argument('--model_type',
+                        type=str,
+                        default=None,
+                        help='quant model type(tiny, small, medium)')
     parser.add_argument('--sensitivity_file',
                         type=str,
                         default=None,
@@ -216,9 +220,22 @@ def main():
            isinstance(m, quant_nn.MaxPool2d):
             all_ops.append((k))
 
-    backbone_inds = list(range(30))
-    neck_inds = list(range(30,31)) + list(range(32,40)) + list(range(40,41)) + list(range(42, 49)) + list(range(50,51)) + list(range(52, 59)) + list(range(60, 61)) + list(range(62, 69)) + list(range(70, 71)) + list(range(72, 79))
-    head_inds = list(range(80, 86))
+    quant_model = args.model_type
+    if quant_model == 'tiny':
+        backbone_inds = list(range(24))
+        neck_inds = []
+        head_inds = list(range(74, 80))
+    elif quant_model == 'small':
+        backbone_inds = list(range(30))
+        neck_inds = list(range(30,31)) + list(range(32,40)) + list(range(40,41)) + list(range(42, 49)) + list(range(50,51)) + list(range(52, 59)) + list(range(60, 61)) + list(range(62, 69)) + list(range(70, 71)) + list(range(72, 79))
+        head_inds = list(range(80, 86))
+    elif quant_model == 'medium':
+        backbone_inds = list(range(5)) + list(range(6, 15)) + list(range(16, 33)) + list(range(34, 46)) + list(range(47, 48))
+        neck_inds = []
+        head_inds = list(range(108, 114))
+    else:
+        raise ValueError("unsupported model type in requested schema(tiny, small, medium)")
+
     all_inds = backbone_inds + neck_inds + head_inds
 
     quantable_sensitivity = [all_ops[x] for x in all_inds]
