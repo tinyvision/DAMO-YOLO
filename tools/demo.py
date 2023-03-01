@@ -159,9 +159,13 @@ class Infer():
 
     def preprocess(self, origin_img):
 
-        img = transform_img(origin_img, 0,
-                **self.config.test.augment.transform,
-                infer_size=self.infer_size)
+        img = transform_img(origin_img=origin_img,
+                            size_divisibility=0,
+                            image_max_range=self.config.test.augment.transform['image_max_range'],
+                            flip_prob=self.config.test.augment.transform['flip_prob'],
+                            image_mean=self.config.test.augment.transform['image_mean'],
+                            image_std=self.config.test.augment.transform['image_std'])
+                            infer_size=self.infer_size)
         img = self._pad_image(img.tensors, self.infer_size)
         # img is a image_list
         ratio = min(origin_img.shape[0] / img.image_sizes[0][0],
