@@ -80,6 +80,7 @@ class ZeroHead(nn.Module):
             nms_conf_thre=0.05,
             nms_iou_thre=0.7,
             nms=True,
+            legacy=True,
             **kwargs):
         self.in_channels = in_channels
         self.num_classes = num_classes
@@ -92,8 +93,11 @@ class ZeroHead(nn.Module):
             self.feat_channels = feat_channels
         else:
             self.feat_channels = [feat_channels] * len(self.strides)
-        # add 1 for keep consistance with former models
-        self.cls_out_channels = num_classes + 1
+        if legacy:
+            # add 1 for keep consistance with former models
+            self.cls_out_channels = num_classes + 1
+        else:
+            self.cls_out_channels = num_classes
         self.reg_max = reg_max
 
         self.nms = nms
@@ -199,7 +203,7 @@ class ZeroHead(nn.Module):
             gt_cls_list = []
             for label in labels:
                 gt_bbox_list.append(label.bbox)
-                gt_cls_list.append((label.get_field('labels')).long()) 
+                gt_cls_list.append((label.get_field('labels')).long())
 
         # prepare priors for label assignment and bbox decode
         mlvl_priors_list = [

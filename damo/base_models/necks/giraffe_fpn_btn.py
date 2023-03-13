@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from ..core.ops import ConvBNAct, CSPStage
+from ..core.ops import ConvBNAct, CSPStage, DepthwiseConv
 
 
 class GiraffeNeckV2(nn.Module):
@@ -15,12 +15,13 @@ class GiraffeNeckV2(nn.Module):
         act='silu',
         spp=False,
         block_name='BasicBlock',
+        depthwise=False,
     ):
         super().__init__()
         self.in_features = in_features
         self.in_channels = in_channels
         self.out_channels = out_channels
-        Conv = ConvBNAct
+        Conv = DepthwiseConv if depthwise else ConvBNAct
 
         self.upsample = nn.Upsample(scale_factor=2, mode='nearest')
 
@@ -32,7 +33,8 @@ class GiraffeNeckV2(nn.Module):
                                 in_channels[2],
                                 round(3 * depth),
                                 act=act,
-                                spp=spp)
+                                spp=spp,
+                                depthwise=depthwise)
 
         # node x4: input x1, x2, x3
         self.bu_conv24 = Conv(in_channels[0], in_channels[0], 3, 2, act=act)
@@ -43,7 +45,8 @@ class GiraffeNeckV2(nn.Module):
                                 in_channels[1],
                                 round(3 * depth),
                                 act=act,
-                                spp=spp)
+                                spp=spp,
+                                depthwise=depthwise)
 
         # node x5: input x2, x4
         self.merge_5 = CSPStage(block_name,
@@ -52,7 +55,8 @@ class GiraffeNeckV2(nn.Module):
                                 out_channels[0],
                                 round(3 * depth),
                                 act=act,
-                                spp=spp)
+                                spp=spp,
+                                depthwise=depthwise)
 
         # node x7: input x4, x5
         self.bu_conv57 = Conv(out_channels[0], out_channels[0], 3, 2, act=act)
@@ -62,7 +66,8 @@ class GiraffeNeckV2(nn.Module):
                                 out_channels[1],
                                 round(3 * depth),
                                 act=act,
-                                spp=spp)
+                                spp=spp,
+                                depthwise=depthwise)
 
         # node x6: input x3, x4, x7
         self.bu_conv46 = Conv(in_channels[1], in_channels[1], 3, 2, act=act)
@@ -74,7 +79,8 @@ class GiraffeNeckV2(nn.Module):
                                 out_channels[2],
                                 round(3 * depth),
                                 act=act,
-                                spp=spp)
+                                spp=spp,
+                                depthwise=depthwise)
 
     def init_weights(self):
         pass

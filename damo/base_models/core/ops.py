@@ -2,9 +2,11 @@
 
 import numpy as np
 import torch
+import math
 import torch.nn as nn
 import torch.nn.functional as F
 
+from .weight_init import kaiming_init, constant_init
 
 class SiLU(nn.Module):
     """export-friendly version of nn.SiLU()"""
@@ -54,9 +56,11 @@ def get_activation(name='silu', inplace=True):
         raise AttributeError('Unsupported act type: {}'.format(name))
 
 
-def get_norm(name, out_channels, inplace=True):
+def get_norm(name, out_channels):
     if name == 'bn':
         module = nn.BatchNorm2d(out_channels)
+    elif name == 'gn':
+        module = nn.GroupNorm(out_channels)
     else:
         raise NotImplementedError
     return module
@@ -89,7 +93,7 @@ class ConvBNAct(nn.Module):
             bias=bias,
         )
         if norm is not None:
-            self.bn = get_norm(norm, out_channels, inplace=True)
+            self.bn = get_norm(norm, out_channels)
         if act is not None:
             self.act = get_activation(act, inplace=True)
         self.with_norm = norm is not None
@@ -138,6 +142,10 @@ class SPPBottleneck(nn.Module):
         x = self.conv2(x)
         return x
 
+def depthwise_conv(i, o, kernel_size, stride=1, padding=0, bias=False):
+    return nn.Conv2d(i, o, kernel_size, stride, padding, bias=bias, groups=i)
+
+
 
 class Focus(nn.Module):
     """Focus width and height information into channel space."""
@@ -171,6 +179,100 @@ class Focus(nn.Module):
         )
         return self.conv(x)
 
+class Hsigmoid(nn.Module):
+    def __init__(self, inplace=True):
+        super(Hsigmoid, self).__init__()
+        self.inplace = inplace
+
+    def forward(self, x):
+        return F.relu6(x + 3., inplace=self.inplace) / 6.
+
+class SEModule(nn.Module):
+    def __init__(self, channel, reduction=4):
+        super(SEModule, self).__init__()
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+        self.fc = nn.Sequential(
+            nn.Linear(channel, channel // reduction, bias=False),
+            nn.ReLU(inplace=True),
+            nn.Linear(channel // reduction, channel, bias=False),
+            Hsigmoid()
+            # nn.Sigmoid()
+        )
+
+    def forward(self, x):
+        b, c, _, _ = x.size()
+        y = self.avg_pool(x).view(b, c)
+        y = self.fc(y).view(b, c, 1, 1)
+        return x * y.expand_as(x)
+
+
+
+class MobileV3Block(nn.Module):
+    def __init__(self,
+                 in_c,
+                 out_c,
+                 btn_c,
+                 kernel_size,
+                 stride,
+                 act='silu',
+                 reparam=False,
+                 block_type='k1kx',
+                 depthwise=False,
+                 use_se=False):
+        super(MobileV3Block, self).__init__()
+        self.stride = stride
+
+        branch_features = math.ceil(out_c * 2.2)
+
+        #assert (self.stride != 1) or (in_c == branch_features << 1)
+
+        if use_se:
+            SELayer = SEModule
+        else:
+            SELayer = nn.Identity
+
+        self.conv = nn.Sequential(
+            nn.Conv2d(
+                in_c,
+                branch_features,
+                kernel_size=1,
+                stride=1,
+                padding=0,
+                bias=False,
+            ),
+            nn.BatchNorm2d(branch_features),
+            get_activation(act),
+            depthwise_conv(
+                branch_features,
+                branch_features,
+                kernel_size=5,
+                stride=self.stride,
+                padding=2,
+            ),
+            nn.BatchNorm2d(branch_features),
+            SELayer(branch_features),
+            get_activation(act),
+            nn.Conv2d(
+                branch_features,
+                out_c,
+                kernel_size=1,
+                stride=1,
+                padding=0,
+                bias=False,
+            ),
+            nn.BatchNorm2d(out_c),
+        )
+        self.use_shotcut = self.stride == 1 and in_c == out_c
+
+    def forward(self, x):
+        if self.use_shotcut:
+            return x + self.conv(x)
+        else:
+            return self.conv(x)
+
+
+
+
 
 class BasicBlock_3x3_Reverse(nn.Module):
     def __init__(self,
@@ -178,21 +280,127 @@ class BasicBlock_3x3_Reverse(nn.Module):
                  ch_hidden_ratio,
                  ch_out,
                  act='relu',
-                 shortcut=True):
+                 shortcut=True,
+                 depthwise=False):
         super(BasicBlock_3x3_Reverse, self).__init__()
         assert ch_in == ch_out
         ch_hidden = int(ch_in * ch_hidden_ratio)
-        self.conv1 = ConvBNAct(ch_hidden, ch_out, 3, stride=1, act=act)
-        self.conv2 = RepConv(ch_in, ch_hidden, 3, stride=1, act=act)
+        if not depthwise:
+            self.conv1 = ConvBNAct(ch_hidden, ch_out, 3, stride=1, act=act)
+            self.conv2 = RepConv(ch_in, ch_hidden, 3, stride=1, act=act)
+        else:
+            self.conv = MobileV3Block(in_c=ch_in, out_c=ch_out, btn_c=None,
+                kernel_size=5, stride=1, act=act, use_se=True)
+
+
         self.shortcut = shortcut
+        self.depthwise = depthwise
 
     def forward(self, x):
-        y = self.conv2(x)
-        y = self.conv1(y)
-        if self.shortcut:
-            return x + y
+        if not self.depthwise:
+            y = self.conv2(x)
+            y = self.conv1(y)
+            if self.shortcut:
+                return x + y
+            else:
+                return y
         else:
-            return y
+            return self.conv(x)
+
+
+
+class DepthwiseConv(nn.Module):
+    def __init__(
+        self,
+        in_channels,
+        out_channels,
+        kernel_size,
+        stride=1,
+        padding=0,
+        dilation=1,
+        bias="auto",
+        norm_cfg="bn",
+        act="ReLU",
+        inplace=True,
+        order=("depthwise", "dwnorm", "act", "pointwise", "pwnorm", "act"),
+    ):
+        super(DepthwiseConv, self).__init__()
+        assert act is None or isinstance(act, str)
+        self.act = act
+        self.inplace = inplace
+        self.order = order
+        padding = (kernel_size - 1) //2
+
+        self.with_norm = norm_cfg is not None
+        # if the conv layer is before a norm layer, bias is unnecessary.
+        if bias == "auto":
+            bias = False if self.with_norm else True
+        self.with_bias = bias
+
+        # build convolution layer
+        self.depthwise = nn.Conv2d(
+            in_channels,
+            in_channels,
+            kernel_size,
+            stride=stride,
+            padding=padding,
+            dilation=dilation,
+            groups=in_channels,
+            bias=bias,
+        )
+        self.pointwise = nn.Conv2d(
+            in_channels, out_channels, kernel_size=1, stride=1, padding=0, bias=bias
+        )
+
+        # export the attributes of self.conv to a higher level for convenience
+        self.in_channels = self.depthwise.in_channels
+        self.out_channels = self.pointwise.out_channels
+        self.kernel_size = self.depthwise.kernel_size
+        self.stride = self.depthwise.stride
+        self.padding = self.depthwise.padding
+        self.dilation = self.depthwise.dilation
+        self.transposed = self.depthwise.transposed
+        self.output_padding = self.depthwise.output_padding
+
+        # build normalization layers
+        if self.with_norm:
+            # norm layer is after conv layer
+            if 'dwnorm' in self.order:
+                self.dwnorm = get_norm(norm_cfg, in_channels)
+            if 'pwnorm' in self.order:
+                self.pwnorm = get_norm(norm_cfg, out_channels)
+
+        # build activation layer
+        if self.act:
+            self.act = get_activation(self.act)
+
+        # Use msra init by default
+        self.init_weights()
+
+    def init_weights(self):
+        if self.act == "lrelu":
+            nonlinearity = "leaky_relu"
+        else:
+            nonlinearity = "relu"
+        kaiming_init(self.depthwise, nonlinearity=nonlinearity)
+        kaiming_init(self.pointwise, nonlinearity=nonlinearity)
+
+        if self.with_norm:
+            if 'dwnorm' in self.order:
+                constant_init(self.dwnorm, 1, bias=0)
+            if 'pwnorm' in self.order:
+                constant_init(self.pwnorm, 1, bias=0)
+
+    def forward(self, x):
+        for layer_name in self.order:
+            if layer_name != "act":
+                layer = self.__getattr__(layer_name)
+                x = layer(x)
+            elif layer_name == "act" and self.act:
+                x = self.act(x)
+        return x
+
+
 
 
 class SPP(nn.Module):
@@ -234,7 +442,8 @@ class CSPStage(nn.Module):
                  ch_out,
                  n,
                  act='swish',
-                 spp=False):
+                 spp=False,
+                 depthwise=False):
         super(CSPStage, self).__init__()
 
         split_ratio = 2
@@ -253,7 +462,8 @@ class CSPStage(nn.Module):
                                            ch_hidden_ratio,
                                            ch_mid,
                                            act=act,
-                                           shortcut=True))
+                                           shortcut=True,
+                                           depthwise=depthwise))
             else:
                 raise NotImplementedError
             if i == (n - 1) // 2 and spp:

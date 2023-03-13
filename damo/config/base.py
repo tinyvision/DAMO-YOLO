@@ -29,11 +29,7 @@ train = easydict({
     # ema
     'ema': True,                   # enable ema
     'ema_momentum': 0.9998,        # ema momentum
-    # optimizer
     'warmup_start_lr': 0,          # warmup start learning rate
-    'base_lr_per_img': 0.01 / 64,  # base learning rate per image
-    'momentum': 0.9,               # mometum of SGD
-    'weight_decay': 5e-4,          # weight decay of SGD
     # scheduler
     'min_lr_ratio': 0.05,          # min lr ratio after closing augmentation
     'batch_size': 64,              # training batch size
@@ -43,6 +39,14 @@ train = easydict({
     'resume_path': None,           # ckpt path for resuming training
     'finetune_path': None,         # ckpt path for finetuning
     'augment': train_aug,          # augmentation config for training
+    # optimizer
+    'optimizer': {
+        'momentum': 0.9,
+        'name': "SGD",
+        'weight_decay': 5e-4,
+        'nesterov': True,
+        'lr': 0.04,
+        },
 })
 
 test = easydict({

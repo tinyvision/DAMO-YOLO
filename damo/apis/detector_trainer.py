@@ -20,6 +20,9 @@ from damo.detectors.detector import build_ddp_model, build_local_model
 from damo.utils import (MeterBuffer, get_model_info, get_rank, gpu_mem_usage,
                         save_checkpoint, setup_logger, synchronize)
 
+from torch.nn import GroupNorm, LayerNorm
+from torch.nn.modules.batchnorm import _BatchNorm
+NORMS = (GroupNorm, LayerNorm, _BatchNorm)
 
 def mkdir(path):
     if not os.path.exists(path):
@@ -100,12 +103,12 @@ class Trainer:
         # setup logger
         if get_rank() == 0:
             os.makedirs(self.file_name, exist_ok=True)
+
         setup_logger(
             self.file_name,
             distributed_rank=get_rank(),
-            filename='train_log.txt',
-            mode='a',
-        )
+            mode='w',
+            )
 
         # logger
         logger.info('args info: {}'.format(self.args))
@@ -114,6 +117,7 @@ class Trainer:
         # build model
         self.model = build_local_model(self.cfg, self.device)
         self.model = nn.SyncBatchNorm.convert_sync_batchnorm(self.model)
+        logger.info('model:', self.model)
 
         if tea_cfg is not None:
             self.distill = True
@@ -121,16 +125,19 @@ class Trainer:
             self.tea_model = build_local_model(self.tea_cfg, self.device)
             self.tea_model.eval()
             tea_ckpt = torch.load(args.tea_ckpt, map_location=self.device)
-            self.tea_model.load_state_dict(tea_ckpt['model'], strict=True)
+            #self.tea_model.load_state_dict(tea_ckpt['model'], strict=True)
+            self.tea_model.load_pretrain_detector(args.tea_ckpt)
             self.feature_loss = FeatureLoss(self.model.neck.out_channels,
                                             self.tea_model.neck.out_channels,
                                             distiller='cwd').to(self.device)
+            self.optimizer = self.build_optimizer((self.model, self.feature_loss),
+                cfg.train.optimizer)
         else:
             self.distill = False
             self.grad_clip = None
 
-        self.optimizer = self.build_optimizer(cfg.train.momentum,
-                                              cfg.train.weight_decay)
+            self.optimizer = self.build_optimizer(self.model,
+                cfg.train.optimizer)
         # resume model
         if self.cfg.train.finetune_path is not None:
             self.model.load_pretrain_detector(self.cfg.train.finetune_path)
@@ -217,50 +224,51 @@ class Trainer:
         self.ckpt_interval_iters = ckpt_interval_epochs * iters_per_epoch
         self.print_interval_iters = print_interval_iters
 
-    def build_optimizer(self, momentum, weight_decay):
+    def build_optimizer(self, models, cfg, exp_module=None):
+        if not isinstance(models, (tuple, list)):
+            models = (models, )
 
-        bn_group, weight_group, bias_group = [], [], []
+        param_dict = {}
+        base_wd = cfg.get('weight_decay', None)
+        optimizer_name = cfg.pop('name')
+        optim_cls = getattr(torch.optim, optimizer_name)
+        for model in models:
+            for name, param in model.named_parameters():
+                if not param.requires_grad:
+                    continue
+                assert param not in param_dict
+                param_dict[param] = {"name": name}
 
-        for k, v in self.model.named_modules():
-            if hasattr(v, 'bias') and isinstance(v.bias, nn.Parameter):
-                bias_group.append(v.bias)
-            if isinstance(v, nn.BatchNorm2d) or 'bn' in k:
-                bn_group.append(v.weight)
-            elif hasattr(v, 'weight') and isinstance(v.weight, nn.Parameter):
-                weight_group.append(v.weight)
+            # weight decay of bn is always 0.
+            for name, m in model.named_modules():
+                if isinstance(m, NORMS):
+                    if hasattr(m, "bias") and m.bias is not None:
+                        param_dict[m.bias].update({"weight_decay": 0})
+                    param_dict[m.weight].update({"weight_decay": 0})
 
-        if self.distill:
-            for k, v in self.feature_loss.named_modules():
-                if hasattr(v, 'bias') and isinstance(v.bias, nn.Parameter):
-                    bias_group.append(v.bias)
-                if isinstance(v, nn.BatchNorm2d) or 'bn' in k:
-                    bn_group.append(v.weight)
-                elif hasattr(v, 'weight') and isinstance(
-                        v.weight, nn.Parameter):
-                    weight_group.append(v.weight)
+            # weight decay of bias is always 0.
+            for name, m in model.named_modules():
+                if hasattr(m, "bias") and m.bias is not None:
+                    param_dict[m.bias].update({"weight_decay": 0})
+            param_groups = []
+        for p, pconfig in param_dict.items():
+            name = pconfig.pop("name", None)
+            param_groups += [{"params": p, **pconfig}]
 
-        optimizer = torch.optim.SGD(
-            bn_group,
-            lr=1e-3,  # only used to init optimizer,
-            # and will be overwrited
-            momentum=momentum,
-            nesterov=True)
-        optimizer.add_param_group({
-            'params': weight_group,
-            'weight_decay': weight_decay
-        })
-        optimizer.add_param_group({'params': bias_group})
-        self.optimizer = optimizer
 
-        return self.optimizer
+        optimizer = optim_cls(param_groups, **cfg)
+
+        return optimizer
 
     def train(self, local_rank):
 
+        infer_shape = sum(self.cfg.test.augment.transform.image_max_range) // 2
         logger.info('Model Summary: {}'.format(
-            get_model_info(self.model, (640, 640))))
+            get_model_info(self.model, (infer_shape, infer_shape))))
 
         # distributed model init
         self.model = build_ddp_model(self.model, local_rank)
+        logger.info('Model: {}'.format(self.model))
 
         logger.info('Training start...')
 
@@ -292,7 +300,7 @@ class Trainer:
 
                 distill_loss = distill_weight * self.feature_loss(
                     fpn_outs, fpn_outs_tea)
-                loss += distill_loss
+                loss = loss + distill_loss
                 outputs['distill_loss'] = distill_loss
 
             else:

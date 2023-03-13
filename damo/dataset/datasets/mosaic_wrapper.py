@@ -324,14 +324,14 @@ class MosaicWrapper(torch.utils.data.dataset.Dataset):
 
             # transfer labels to BoxList
             h_tmp, w_tmp = img.shape[:2]
-            boxes = [label[:4] for label in labels]
+            boxes = np.array([label[:4] for label in labels])
             boxes = torch.as_tensor(boxes).reshape(-1, 4)
             areas = (boxes[:, 3] - boxes[:, 1]) * (boxes[:, 2] - boxes[:, 0])
             valid_idx = areas > 4
 
             target = BoxList(boxes[valid_idx], (w_tmp, h_tmp), mode='xyxy')
 
-            classes = [label[4] for label in labels]
+            classes = np.array([label[4] for label in labels])
             classes = torch.tensor(classes)[valid_idx]
             target.add_field('labels', classes.long())
 

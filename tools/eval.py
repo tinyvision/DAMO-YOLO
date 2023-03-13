@@ -82,22 +82,18 @@ def main():
     config = parse_config(args.config_file)
     config.merge(args.opts)
 
-    file_name = os.path.join(config.miscs.output_dir, config.miscs.exp_name)
+    save_dir = os.path.join(config.miscs.output_dir, config.miscs.exp_name)
 
     if args.local_rank == 0:
-        os.makedirs(file_name, exist_ok=True)
+        os.makedirs(save_dir, exist_ok=True)
 
-    setup_logger(file_name,
+    setup_logger(save_dir,
                  distributed_rank=args.local_rank,
-                 filename='val_log.txt',
-                 mode='a')
+                 mode='w')
     logger.info('Args: {}'.format(args))
 
     model = build_local_model(config, device)
     model.head.nms = True
-    logger.info('Model Summary: {}'.format(get_model_info(model, (640, 640))))
-
-    model = build_ddp_model(model, local_rank=args.local_rank)
 
     model.cuda(args.local_rank)
     model.eval()
@@ -108,7 +104,7 @@ def main():
     ckpt = torch.load(ckpt_file, map_location=loc)
     new_state_dict = {}
     for k, v in ckpt['model'].items():
-        k = 'module.' + k
+        k = k.replace('module', '')
         new_state_dict[k] = v
     model.load_state_dict(new_state_dict, strict=False)
     logger.info('loaded checkpoint done.')
@@ -117,6 +113,11 @@ def main():
         if isinstance(layer, RepConv):
             layer.switch_to_deploy()
 
+    infer_shape = sum(config.test.augment.transform.image_max_range) // 2
+    logger.info('Model Summary: {}'.format(get_model_info(model,
+        (infer_shape, infer_shape))))
+
+    model = build_ddp_model(model, local_rank=args.local_rank)
     if args.fuse:
         logger.info('\tFusing model...')
         model = fuse_model(model)

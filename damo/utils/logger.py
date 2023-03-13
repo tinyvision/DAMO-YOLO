@@ -3,6 +3,7 @@
 import inspect
 import os
 import sys
+import datetime
 
 from loguru import logger
 
@@ -59,12 +60,11 @@ def redirect_sys_output(log_level='INFO'):
     sys.stdout = redirect_logger
 
 
-def setup_logger(save_dir, distributed_rank=0, filename='log.txt', mode='a'):
+def setup_logger(save_dir, distributed_rank=0, mode='a'):
     """setup logger for training and testing.
     Args:
         save_dir(str): location to save log file
         distributed_rank(int): device rank when multi-gpu environment
-        filename (string): log save name.
         mode(str): log file write mode, `append` or `override`. default is `a`.
 
     Return:
@@ -76,11 +76,11 @@ def setup_logger(save_dir, distributed_rank=0, filename='log.txt', mode='a'):
         '<cyan>{name}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>')
 
     logger.remove()
-    save_file = os.path.join(save_dir, filename)
-    if mode == 'o' and os.path.exists(save_file):
-        os.remove(save_file)
+
     # only keep logger in rank0 process
     if distributed_rank == 0:
+        filename = datetime.datetime.now().strftime('%Y-%m-%d-%H%M')
+        save_file = os.path.join(save_dir, filename)
         logger.add(
             sys.stderr,
             format=loguru_format,
