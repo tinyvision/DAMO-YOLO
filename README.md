@@ -26,7 +26,7 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
     * Welcome to join [the 3rd Anti-UAV Challenge](https://anti-uav.github.io/Evaluate/) on CVPR2023. The Challenge provides baseline models trained by DAMO-YOLO, which can be found on [DamoYolo_Anti-UAV-23_S](https://modelscope.cn/models/damo/cv_tinynas_uav-detection_damoyolo/summary) and [DamoYolo_Anti-UAV-23_L](https://modelscope.cn/models/damo/cv_tinynas_uav-detection_damoyolo-l/summary).
 - **[2023/01/07: We release DAMO-YOLO v0.2.1!]**
     * Add [TensorRT Int8 Quantization Tutorial](./tools/partial_quantization/README.md), achieves 19% speed up with only 0.3% accuracy loss.
-    * Add [general demo tools](#quick-start), support TensorRT/Onnx/Torch based vidoe/image inference.
+    * Add [general demo tools](#quick-start), support TensorRT/Onnx/Torch based vidoe/image/camera inference.
     * Add more [industry application models](#industry-application-models), including [human detection](https://www.modelscope.cn/models/damo/cv_tinynas_human-detection_damoyolo/summary), [helmet detection](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_safety-helmet/summary), [facemask detection](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_facemask/summary) and [cigarette detection](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_cigarette/summary).
     * Add [third-party resources](#third-party-resources), including [DAMO-YOLO Code Interpretation](https://blog.csdn.net/jyyqqq/article/details/128419143), [Practical Example for Finetuning on Custom Dataset](https://blog.csdn.net/Cwhgn/article/details/128447380?spm=1001.2014.3001.5501). 
 - **[2022/12/15: We release  DAMO-YOLO v0.1.1!]**
@@ -94,16 +94,16 @@ pip install git+https://github.com/philferriere/cocoapi.git#subdirectory=PythonA
 
 Step1. Download a pretrained torch, onnx or tensorRT engine from the benchmark table, e.g., damoyolo_tinynasL25_S.pth, damoyolo_tinynasL25_S.onnx, damoyolo_tinynasL25_S.trt.
 
-Step2. Use -f(config filename) to specify your detector's config, --path to specify input data path, image or video are supported. For example:
+Step2. Use -f(config filename) to specify your detector's config, --path to specify input data path, image/video/camera are supported. For example:
 ```shell
-# torch
-python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./damoyolo_tinynasL25_S.pth --engine_type torch --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg
+# torch engine with image
+python tools/demo.py image -f ./configs/damoyolo_tinynasL25_S.py --engine ./damoyolo_tinynasL25_S.pth --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg
 
-# onnx
-python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./damoyolo_tinynasL25_S.onnx --engine_type onnx --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg
+# onnx engine with video
+python tools/demo.py video -f ./configs/damoyolo_tinynasL25_S.py --engine ./damoyolo_tinynasL25_S.onnx --conf 0.6 --infer_size 640 640 --device cuda --path your_video.mp4
 
-# tensorRT
-python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./damoyolo_tinynasL25_S.trt --engine_type tensorRT --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg
+# tensorRT engine with camera
+python tools/demo.py camera -f ./configs/damoyolo_tinynasL25_S.py --engine ./damoyolo_tinynasL25_S.trt --conf 0.6 --infer_size 640 640 --device cuda --camid 0
 ```
 
 </details>
@@ -220,10 +220,10 @@ python tools/trt_eval.py -f configs/damoyolo_tinynasL25_S.py -trt deploy/damoyol
 Step.3 onnx or trt engine inference demo and appoint test image/video by --path. end2end means to using trt_with_nms to inference.
 ```shell
 # onnx inference
-python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./damoyolo_tinynasL25_S.onnx --engine_type onnx --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg
+python tools/demo.py image -f ./configs/damoyolo_tinynasL25_S.py --engine ./damoyolo_tinynasL25_S.onnx --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg
 
 # trt inference
-python tools/demo.py -f ./configs/damoyolo_tinynasL25_S.py --engine ./deploy/damoyolo_tinynasL25_S_end2end_fp16_bs1.trt --engine_type tensorRT --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg --end2end
+python tools/demo.py image -f ./configs/damoyolo_tinynasL25_S.py --engine ./deploy/damoyolo_tinynasL25_S_end2end_fp16_bs1.trt --conf 0.6 --infer_size 640 640 --device cuda --path ./assets/dog.jpg --end2end
 ```
 </details>
 

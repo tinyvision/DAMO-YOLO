@@ -22,10 +22,16 @@ VIDEOS=['mp4', 'avi']
 
 
 class Infer():
-    def __init__(self, config, infer_size=[640,640], device='cuda', engine_type='torch', output_dir='./', ckpt=None, end2end=False):
+    def __init__(self, config, infer_size=[640,640], device='cuda', output_dir='./', ckpt=None, end2end=False):
 
         self.ckpt_path = ckpt
-        self.engine_type = engine_type
+        suffix = ckpt.split('.')[-1]
+        if suffix == 'onnx':
+            self.engine_type = 'onnx',
+        elif suffix == 'trt':
+            self.engine_type = 'tensorRT'
+        elif suffix in ['pt', 'pth']:
+            self.engine_type = 'torch'
         self.end2end = end2end # only work with tensorRT engine
         self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)
@@ -45,7 +51,7 @@ class Infer():
         self.infer_size = infer_size
         config.dataset.size_divisibility = 0
         self.config = config
-        self.model = self._build_engine(self.config, engine_type)
+        self.model = self._build_engine(self.config, self.engine_type)
 
     def _pad_image(self, img, target_size):
         n, c, h, w = img.shape
@@ -162,15 +168,14 @@ class Infer():
         img = transform_img(origin_img, 0,
                             **self.config.test.augment.transform,
                             infer_size=self.infer_size)
-        img = self._pad_image(img.tensors, self.infer_size)
         # img is a image_list
-        ratio = min(origin_img.shape[0] / img.image_sizes[0][0],
-            origin_img.shape[1] / img.image_sizes[0][1])
+        oh, ow, _  = origin_img.shape
+        img = self._pad_image(img.tensors, self.infer_size)
 
         img = img.to(self.device)
-        return img, ratio
+        return img, (ow, oh)
 
-    def postprocess(self, preds, origin_image=None, ratio=1.0):
+    def postprocess(self, preds, image, origin_shape=None):
 
         if self.engine_type == 'torch':
             output = preds
@@ -182,7 +187,7 @@ class Infer():
                 self.config.model.head.num_classes,
                 self.config.model.head.nms_conf_thre,
                 self.config.model.head.nms_iou_thre,
-                origin_image)
+                image)
         elif self.engine_type == 'tensorRT':
             if self.end2end:
                 nums = preds[0]
@@ -192,7 +197,7 @@ class Infer():
                 batch_size = boxes.shape[0]
                 output = [None for _ in range(batch_size)]
                 for i in range(batch_size):
-                    img_h, img_w = origin_image.image_sizes[i]
+                    img_h, img_w = image.image_sizes[i]
                     boxlist = BoxList(torch.Tensor(boxes[i][:nums[i][0]]),
                               (img_w, img_h),
                               mode='xyxy')
@@ -209,33 +214,32 @@ class Infer():
                 output = postprocess(cls_scores, bbox_preds,
                              self.config.model.head.num_classes,
                              self.config.model.head.nms_conf_thre,
-                             self.config.model.head.nms_iou_thre, origin_image)
+                             self.config.model.head.nms_iou_thre, image)
 
-
-        bboxes = output[0].bbox * ratio
-        scores = output[0].get_field('scores')
-        cls_inds = output[0].get_field('labels')
+        output = output[0].resize(origin_shape)
+        bboxes = output.bbox
+        scores = output.get_field('scores')
+        cls_inds = output.get_field('labels')
 
         return bboxes,  scores, cls_inds
 
 
-    def forward(self, image):
-        image, ratio = self.preprocess(image)
+    def forward(self, origin_image):
+
+        image, origin_shape = self.preprocess(origin_image)
+
         if self.engine_type == 'torch':
             output = self.model(image)
-            bboxes, scores, cls_inds = self.postprocess(output, ratio=ratio)
 
         elif self.engine_type == 'onnx':
             image_np = np.asarray(image.tensors.cpu())
             output = self.model.run(None, {self.input_name: image_np})
-            bboxes, scores, cls_inds = self.postprocess(output, image, ratio=ratio)
 
         elif self.engine_type == 'tensorRT':
-
             image_np = np.asarray(image.tensors.cpu()).astype(np.float32)
             output = self.model(image_np)
-            bboxes, scores, cls_inds = self.postprocess(output, image, ratio=ratio)
 
+        bboxes, scores, cls_inds = self.postprocess(output, image, origin_shape=origin_shape)
 
         return bboxes, scores, cls_inds
 
@@ -251,18 +255,23 @@ class Infer():
 def make_parser():
     parser = argparse.ArgumentParser('DAMO-YOLO Demo')
 
-    parser.add_argument(
-        '-f',
-        '--config_file',
-        default=None,
-        type=str,
-        help='pls input your config file',
-    )
+    parser.add_argument('input_type',
+                        default='image',
+                        help="input type, support [image, video, camera]")
+    parser.add_argument('-f',
+                        '--config_file',
+                        default=None,
+                        type=str,
+                        help='pls input your config file',)
     parser.add_argument('-p',
                         '--path',
                         default='./assets/dog.jpg',
                         type=str,
                         help='path to image or video')
+    parser.add_argument('--camid',
+                        type=int,
+                        default=0,
+                        help='camera id, necessary when input_type is camera')
     parser.add_argument('--engine',
                         default=None,
                         type=str,
@@ -271,10 +280,6 @@ def make_parser():
                         default='cuda',
                         type=str,
                         help='device used to inference')
-    parser.add_argument('--engine_type',
-                        default='torch',
-                        type=str,
-                        help='type of inference engine, e.g. torch/onnx/tensorRT')
     parser.add_argument('--output_dir',
                         default='./demo',
                         type=str,
@@ -303,12 +308,12 @@ def make_parser():
 def main():
     args = make_parser().parse_args()
     config = parse_config(args.config_file)
+    input_type = args.input_type
 
     infer_engine = Infer(config, infer_size=args.infer_size, device=args.device,
-        engine_type=args.engine_type, output_dir=args.output_dir, ckpt=args.engine, end2end=args.end2end)
-    input_type = os.path.basename(args.path).split('.')[-1].lower()
+        output_dir=args.output_dir, ckpt=args.engine, end2end=args.end2end)
 
-    if input_type in IMAGES:
+    if input_type == 'image':
         origin_img = np.asarray(Image.open(args.path).convert('RGB'))
         bboxes, scores, cls_inds = infer_engine.forward(origin_img)
         vis_res = infer_engine.visualize(origin_img, bboxes, scores, cls_inds, conf=args.conf, save_name=os.path.basename(args.path), save_result=args.save_result)
@@ -316,14 +321,14 @@ def main():
             cv2.namedWindow("DAMO-YOLO", cv2.WINDOW_NORMAL)
             cv2.imshow("DAMO-YOLO", vis_res)
 
-    elif input_type in VIDEOS:
-        cap = cv2.VideoCapture(args.path)
+    elif input_type == 'video' or input_type == 'camera':
+        cap = cv2.VideoCapture(args.path if input_type == 'video' else args.camid)
         width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)  # float
         height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)  # float
         fps = cap.get(cv2.CAP_PROP_FPS)
         if args.save_result:
             save_path = os.path.join(args.output_dir, os.path.basename(args.path))
-            print(f'Video inference result will be saved at {save_path}')
+            print(f'inference result will be saved at {save_path}')
             vid_writer = cv2.VideoWriter(
                 save_path, cv2.VideoWriter_fourcc(*"mp4v"),
                 fps, (int(width), int(height)))
