@@ -1,6 +1,15 @@
 English | [简体中文](README_cn.md)
 
-<div align="center"><img src="assets/logo.png" width="1500"></div>
+<div align="center"><img src="assets/logo.png" width="1500">
+
+![](https://img.shields.io/badge/language-python-blue.svg)
+![](https://img.shields.io/badge/license-Apache-000000.svg)
+![Contributing](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+[![README-cn](https://shields.io/badge/README-%E4%B8%AD%E6%96%87-blue)](README_cn.md)
+[![ThirdParty](https://img.shields.io/badge/ThirdParty--Resources-brightgreen)](#third-parry-resources)
+[![IndustryModels](https://img.shields.io/badge/Industry--Models-orange)](#industry-application-models)
+
+</div>
 
 ## Introduction
 <div align="center"><img src="assets/overview.gif" width="1500"></div>
@@ -10,7 +19,7 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
 <div align="center"><img src="assets/curve.png" width="500"></div>
 
 ## Updates
-- **[2023/03/13: We release DAMO-YOLO v0.3.0!]**
+- **![new](https://img.alicdn.com/imgextra/i4/O1CN01kUiDtl1HVxN6G56vN_!!6000000000764-2-tps-43-19.png) [2023/03/13: We release DAMO-YOLO v0.3.0!]**
     * Release DAMO-YOLO-Nano, which achieves 286fps on x86 cpu, possesses 35.1 mAP with only 3.02GFlops.
     * Update the optimizer builder, edits the optimizer config, you are able to use any optimizer supported by Pytorch.
 - **[2023/02/15: Baseline for The 3rd Anti-UAV Challenge.]**

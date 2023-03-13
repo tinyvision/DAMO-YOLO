@@ -1,6 +1,16 @@
 [English](README.md) | 简体中文
 
-<div align="center"><img src="assets/logo.png" width="1500"></div>
+<div align="center"><img src="assets/logo.png" width="1500">
+
+![](https://img.shields.io/badge/language-python-blue.svg)
+![](https://img.shields.io/badge/license-Apache-000000.svg)
+![Contributing](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+[![README](https://shields.io/badge/README-English-blue)](README.md)
+[![ThirdParty](https://img.shields.io/badge/ThirdParty--Resources-brightgreen)](#third-parry-resources)
+[![IndustryModels](https://img.shields.io/badge/Industry--Models-orange)](#industry-application-models)
+
+</div>
+
 
 ## 简介
 <div align="center"><img src="assets/overview.gif" width="1500"></div>
@@ -10,7 +20,7 @@
 <div align="center"><img src="assets/curve.png" width="500"></div>
 
 ## 更新日志
-- **[2023/03/13: DAMO-YOLO v0.3.0更新!]**
+- **![new](https://img.alicdn.com/imgextra/i4/O1CN01kUiDtl1HVxN6G56vN_!!6000000000764-2-tps-43-19.png) [2023/03/13: DAMO-YOLO v0.3.0更新!]**
     *开源面向端上的DAMO-YOLO-Nano模型，仅用3.0GFLops在COCO数据集上达到35.1的mAP，在X86-CPU Intel 8163上测得的FPS为286。
     *更新升级了optimizer builder，现在通过编辑config文件中的optimizer，即可使用任意一款Pytorch支持的优化器进行训练。
 - **[2023/02/15: 第三届无人机检测竞赛基准。]**
