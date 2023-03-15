@@ -83,7 +83,6 @@ def trt_inference(config,
 
     setup_logger(file_name,
                  distributed_rank=0,
-                 filename='val_log.txt',
                  mode='a')
 
     if conf is not None:

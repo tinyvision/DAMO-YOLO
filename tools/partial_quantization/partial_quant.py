@@ -16,13 +16,9 @@ from damo.detectors.detector import build_local_model
 from damo.utils.model_utils import get_model_info, replace_module
 from tools.trt_eval import trt_inference
 
-from tools.partial_quantization.utils import module_quant_enable, module_quant_disable, model_quant_disable
-from tools.partial_quantization.utils import quant_sensitivity_save, quant_sensitivity_load, init_calib_data_loader
-from tools.partial_quantization.ptq import do_ptq, load_ptq, partial_quant
+from tools.partial_quantization.utils import post_train_quant, load_quanted_model, execute_partial_quant, init_calib_data_loader
 
 from pytorch_quantization import nn as quant_nn
-
-opt_concat_fusion_list = []
 
 
 def mkdir(path):
@@ -207,14 +203,14 @@ def main():
     # 1. do post training quantization
     if args.calib_weights is None:
         calib_data_loader = init_calib_data_loader(config)
-        model_ptq = do_ptq(model, calib_data_loader, 1000, device)
-        torch.save({'model': model_ptq}, args.ckpt.replace('.pth', '_calib.pth'))
+        ptq_model = post_train_quant(model, calib_data_loader, 1000, device)
+        torch.save({'model': ptq_model}, args.ckpt.replace('.pth', '_calib.pth'))
     else:
-        model_ptq = load_ptq(model, args.calib_weights, device)
+        ptq_model = load_quanted_model(model, args.calib_weights, device)
 
     # 2. load sensitivity data
     all_ops = list()
-    for k, m in model_ptq.named_modules():
+    for k, m in ptq_model.named_modules():
         if isinstance(m, quant_nn.QuantConv2d) or \
            isinstance(m, quant_nn.QuantConvTranspose2d) or \
            isinstance(m, quant_nn.MaxPool2d):
@@ -239,22 +235,18 @@ def main():
     all_inds = backbone_inds + neck_inds + head_inds
 
     quantable_sensitivity = [all_ops[x] for x in all_inds]
-    quantable_ops = [qops for qops in quantable_sensitivity]        
+    ops_to_quant = [qops for qops in quantable_sensitivity]        
 
     # 3. only quantize ops in quantable_ops list
-    partial_quant(model_ptq, quantable_ops=quantable_ops)
+    execute_partial_quant(ptq_model, ops_to_quant=ops_to_quant)
 
-    # 4. concat amax fusion
-    for sub_fusion_list in opt_concat_fusion_list:
-        ops = [get_module(model_ptq, op_name) for op_name in sub_fusion_list]
-        concat_quant_amax_fuse(ops)
 
-    # 5. ONNX export
+    # 4. ONNX export
     quant_nn.TensorQuantizer.use_fb_fake_quant = True
     dummy_input = torch.randn(args.batch_size, 3, args.img_size, args.img_size).to(device)
-    _ = model_ptq(dummy_input)
+    _ = ptq_model(dummy_input)
     torch.onnx._export(
-        model_ptq,
+        ptq_model,
         dummy_input,
         onnx_name,
         verbose=False,
@@ -275,10 +267,10 @@ def main():
     onnx.save(onnx_model, onnx_name)
     logger.info('generated onnx model named {}'.format(onnx_name))
 
-    # 6. export trt
+    # 5. export trt
     if args.trt:
         trt_name = trt_export(onnx_name, args.batch_size, args.img_size, args.img_size)
-        # 7. trt eval
+        # 6. trt eval
         if args.trt_eval:
             logger.info('start trt inference on coco validataion dataset')
             trt_inference(config, trt_name, args.img_size, args.batch_size,
