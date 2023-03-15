@@ -43,7 +43,7 @@ class Config(MyConfig):
 
         # backbone
         structure = self.read_structure(
-            './damo/base_models/backbones/nas_backbones/tinynas_L20_k1kx_mobile.txt')
+            './damo/base_models/backbones/nas_backbones/tinynas_L20_k1kx_nano.txt')
         TinyNAS = {
             'name': 'TinyNAS_mob',
             'net_structure_str': structure,
@@ -53,7 +53,7 @@ class Config(MyConfig):
             'act': 'silu',
             'reparam': False,
             'depthwise': True,
-            'use_se': True,
+            'use_se': False,
         }
 
         self.model.backbone = TinyNAS
