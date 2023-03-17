@@ -18,7 +18,7 @@ Mosaic_Mixup = {
     'degrees': 10.0,
     'translate': 0.2,
     'shear': 2.0,
-    'keep_ratio': True,
+    'keep_ratio': False,
 }
 
 train_transform = {
@@ -26,7 +26,7 @@ train_transform = {
     'image_std': [1.0, 1.0, 1.0],
     'image_max_range': (640, 640),
     'flip_prob': 0.5,
-    'keep_ratio': True,
+    'keep_ratio': False,
     'autoaug_dict': SADA,
 }
 test_transform = {
@@ -34,7 +34,7 @@ test_transform = {
     'image_std': [1.0, 1.0, 1.0],
     'image_max_range': (640, 640),
     'flip_prob': 0.0,
-    'keep_ratio': True,
+    'keep_ratio': False,
 }
 
 train_aug = {

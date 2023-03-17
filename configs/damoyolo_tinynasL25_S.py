@@ -69,7 +69,8 @@ class Config(MyConfig):
             'reg_max': 16,
             'act': 'silu',
             'nms_conf_thre': 0.05,
-            'nms_iou_thre': 0.7
+            'nms_iou_thre': 0.7,
+            'legacy': False,
         }
         self.model.head = ZeroHead
 
