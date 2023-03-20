@@ -24,7 +24,7 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
     * Update the optimizer builder, edits the optimizer config, you are able to use any optimizer supported by Pytorch.
     * Update the data loading pipeline, leads to significant improvement of DAMO-YOLO series models. e.g. The mAP of DAMO-YOLO-S increased from 46.8 to 47.7, DAMO-YOLO-T increased from 43.0 to 43.6.   
 - **[2023/02/15: Baseline for The 3rd Anti-UAV Challenge.]**
-    * Welcome to join [the 3rd Anti-UAV Challenge](https://anti-uav.github.io/Evaluate/) on CVPR2023. The Challenge provides baseline models trained by DAMO-YOLO, which can be found on [DamoYolo_Anti-UAV-23_S](https://modelscope.cn/models/damo/cv_tinynas_uav-detection_damoyolo/summary) and [DamoYolo_Anti-UAV-23_L](https://modelscope.cn/models/damo/cv_tinynas_uav-detection_damoyolo-l/summary).
+    * Welcome to join [the 3rd Anti-UAV Challenge](https://anti-uav.github.io/Evaluate/) on CVPR2023. The Challenge provides baseline models trained by DAMO-YOLO, which can be found on [DamoYolo_Anti-UAV-23_S](https://modelscope.cn/models/damo/cv_tinynas_uav-detection_damoyolo/summary).
 - **[2023/01/07: We release DAMO-YOLO v0.2.1!]**
     * Add [TensorRT Int8 Quantization Tutorial](./tools/partial_quantization/README.md), achieves 19% speed up with only 0.3% accuracy loss.
     * Add [general demo tools](#quick-start), support TensorRT/Onnx/Torch based vidoe/image/camera inference.
@@ -252,8 +252,8 @@ We provide DAMO-YOLO models for applications in real scenarios, which are listed
 |[**Human Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_human-detection_damoyolo/summary)| [**Helmet Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_safety-helmet/summary)|[**Head Detection**](https://modelscope.cn/models/damo/cv_tinynas_head-detection_damoyolo/summary) | [**Smartphone Detectioin**](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_phone/summary)|
 | :---: | :---: |  :---: | :---: | 
 |<img src='./assets/applications/human_detection.png' height="100px" >| <img src='./assets/applications/helmet_detection.png' height="100px">|<img src='./assets/applications/head_detection.png' height="100px"> | <img src='./assets/applications/smartphone_detection.png' height="100px">|
-|[**Facemask Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_facemask/summary) |[**Cigarette Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_cigarette/summary) |[**Traffic Sign Detection**](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_traffic_sign/summary) | |
-|<img src='./assets/applications/facemask_detection.png' height="100px">| <img src='./assets/applications/cigarette_detection.png' height="100px">|<img src='./assets/applications/trafficsign_detection.png' height="100px"> | |
+|[**Facemask Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_facemask/summary) |[**Cigarette Detection**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_cigarette/summary) |[**Traffic Sign Detection**](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_traffic_sign/summary) | [**NFL-helmet detection**](https://www.modelscope.cn/models/XianzheXu/cv_tinynas_object-detection_damoyolo_nfl-helmet/summary)|
+|<img src='./assets/applications/facemask_detection.png' height="100px">| <img src='./assets/applications/cigarette_detection.png' height="100px">|<img src='./assets/applications/trafficsign_detection.png' height="100px"> | <img src='./assets/applications/nflhelmet_detection.jpg'>|
 
 
 
@@ -293,7 +293,6 @@ If you use DAMO-YOLO in your research, please cite our work by using the followi
   author={yiqi jiang and Zhiyu Tan and Junyan Wang and Xiuyu Sun and Ming Lin and Hao Li},
   booktitle={International Conference on Learning Representations},
   year={2022},
-  url={https://openreview.net/forum?id=cBu4ElJfneV}
 }
 ```
 

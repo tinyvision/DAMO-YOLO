@@ -25,7 +25,7 @@
     * 更新升级了optimizer builder，现在通过编辑config文件中的optimizer，即可使用任意一款Pytorch支持的优化器进行训练。
     * 更新了data loader流程，给DAMO-YOLO全系列模型精度带来显著提升，其中DAMO-YOLO-S模型mAP从46.8提升到47.7，DAMO-YOLO-T模型mAP从43.0提升到43.6。
 - **[2023/02/15: 第三届无人机检测竞赛基准。]**
-    * 欢迎大家参加CVPR2023举办的[第三届无人机检测竞赛](https://anti-uav.github.io/Evaluate/)。比赛提供了基于DAMO-YOLO框架训练的基准模型，[DamoYolo_Anti-UAV-23_S](https://modelscope.cn/models/damo/cv_tinynas_uav-detection_damoyolo/summary)和[DamoYolo_Anti-UAV-23_L](https://modelscope.cn/models/damo/cv_tinynas_uav-detection_damoyolo-l/summary)，方便参赛选手使用。
+    * 欢迎大家参加CVPR2023举办的[第三届无人机检测竞赛](https://anti-uav.github.io/Evaluate/)。比赛提供了基于DAMO-YOLO框架训练的基准模型，[DamoYolo_Anti-UAV-23_S](https://modelscope.cn/models/damo/cv_tinynas_uav-detection_damoyolo/summary)。
 - **[2023/01/07: DAMO-YOLO v0.2.1更新!]**
     * 增加[TensorRT Int8部分量化教程](./tools/partial_quantization/README.md)，实现19%提速仅损失0.3%精度。
     * 增加[通用demo工具](#快速上手)，支持TensorRT/Onnx/Torch引擎实现视频/图像/摄像头推理。
@@ -254,8 +254,8 @@ python tools/demo.py image -f ./configs/damoyolo_tinynasL25_S.py --engine ./depl
 |[**人体检测**](https://www.modelscope.cn/models/damo/cv_tinynas_human-detection_damoyolo/summary)| [**安全帽检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_safety-helmet/summary)|[**人头检测**](https://modelscope.cn/models/damo/cv_tinynas_head-detection_damoyolo/summary) | [**手机检测**](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_phone/summary)|
 | :---: | :---: |  :---: | :---: | 
 |<img src='./assets/applications/human_detection.png' height="100px" >| <img src='./assets/applications/helmet_detection.png' height="100px">| <img src='./assets/applications/head_detection.png' height="100px"> | <img src='./assets/applications/smartphone_detection.png' height="100px">|
-|[**口罩检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_facemask/summary) |[**香烟检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_cigarette/summary) | [**交通标识检测**](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_traffic_sign/summary) | |
-|<img src='./assets/applications/facemask_detection.png' height="100px">| <img src='./assets/applications/cigarette_detection.png' height="100px">|<img src='./assets/applications/trafficsign_detection.png' height="100px"> | |
+|[**口罩检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_facemask/summary) |[**香烟检测**](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_cigarette/summary) | [**交通标识检测**](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo_traffic_sign/summary) | [**NFL-头盔检测**](https://www.modelscope.cn/models/XianzheXu/cv_tinynas_object-detection_damoyolo_nfl-helmet/summary)|
+|<img src='./assets/applications/facemask_detection.png' height="100px">| <img src='./assets/applications/cigarette_detection.png' height="100px">|<img src='./assets/applications/trafficsign_detection.png' height="100px"> | <img src='./assets/applications/nflhelmet_detection.jpg'>|
 
 
 ## 第三方资源
@@ -294,6 +294,5 @@ python tools/demo.py image -f ./configs/damoyolo_tinynasL25_S.py --engine ./depl
   author={yiqi jiang and Zhiyu Tan and Junyan Wang and Xiuyu Sun and Ming Lin and Hao Li},
   booktitle={International Conference on Learning Representations},
   year={2022},
-  url={https://openreview.net/forum?id=cBu4ElJfneV}
 }
 ```
