@@ -21,8 +21,8 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
 ## Updates
 - **[2023/03/13: We release DAMO-YOLO v0.3.0!] ![new](https://img.alicdn.com/imgextra/i4/O1CN01kUiDtl1HVxN6G56vN_!!6000000000764-2-tps-43-19.png)**
     * Release DAMO-YOLO-Nano, which achieves 286fps on x86 cpu, possesses 35.1 mAP with only 3.02GFlops.
-    * Update the optimizer builder, edits the optimizer config, you are able to use any optimizer supported by Pytorch.
-    * Update the data loading pipeline, leads to significant improvement of DAMO-YOLO series models. e.g. The mAP of DAMO-YOLO-S increased from 46.8 to 47.7, DAMO-YOLO-T increased from 43.0 to 43.6.   
+    * Upgrade the optimizer builder, edits the optimizer config, you are able to use any optimizer supported by Pytorch.
+    * Upgrade the data loading pipeline and training parameters, leading to significant improvements of DAMO-YOLO models, e.g., the mAP of DAMO-YOLO-T/S/M increased from 43.0/46.8/50.0 to 43.6/47.7/50.2 respectively. 
 - **[2023/02/15: Baseline for The 3rd Anti-UAV Challenge.]**
     * Welcome to join [the 3rd Anti-UAV Challenge](https://anti-uav.github.io/Evaluate/) on CVPR2023. The Challenge provides baseline models trained by DAMO-YOLO, which can be found on [DamoYolo_Anti-UAV-23_S](https://modelscope.cn/models/damo/cv_tinynas_uav-detection_damoyolo/summary).
 - **[2023/01/07: We release DAMO-YOLO v0.2.1!]**
