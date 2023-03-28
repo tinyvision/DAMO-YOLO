@@ -20,7 +20,7 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
 
 ## Updates
 - **[2023/03/13: We release DAMO-YOLO v0.3.0!] ![new](https://img.alicdn.com/imgextra/i4/O1CN01kUiDtl1HVxN6G56vN_!!6000000000764-2-tps-43-19.png)**
-    * Release DAMO-YOLO-Nano, which achieves 286fps on x86 cpu, possesses 35.1 mAP with only 3.02GFlops.
+    * Release DAMO-YOLO-Nano, which achieves 35.1 mAP with only 3.02GFlops.
     * Upgrade the optimizer builder, edits the optimizer config, you are able to use any optimizer supported by Pytorch.
     * Upgrade the data loading pipeline and training parameters, leading to significant improvements of DAMO-YOLO models, e.g., the mAP of DAMO-YOLO-T/S/M increased from 43.0/46.8/50.0 to 43.6/47.7/50.2 respectively. 
 - **[2023/02/15: Baseline for The 3rd Anti-UAV Challenge.]**
@@ -33,9 +33,6 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
 - **[2022/12/15: We release  DAMO-YOLO v0.1.1!]**
   * Add a detailed [Custom Dataset Finetune Tutorial](./assets/CustomDatasetTutorial.md).
   * The stuck problem caused by no-label data (*e.g.*, [ISSUE#30](https://github.com/tinyvision/DAMO-YOLO/issues/30)) is solved. Feel free to contact us, we are 24h stand by.
-- **[2022/11/27: We release  DAMO-YOLO v0.1.0!]**
-  * Release DAMO-YOLO object detection models, including DAMO-YOLO-T, DAMO-YOLO-S and DAMO-YOLO-M.
-  * Release model convert tools for easy deployment, supports onnx and TensorRT-fp32, TensorRT-fp16.
 
 ## Web Demo
 - [DAMO-YOLO-T](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo-t/summary), [DAMO-YOLO-S](https://modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo/summary), [DAMO-YOLO-M](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo-m/summary) is integrated into ModelScope. Training is supported on [ModelScope](https://www.modelscope.cn/models/damo/cv_tinynas_object-detection_damoyolo/summary) now! **Come and try DAMO-YOLO with free GPU resources provided by ModelScope.** 
@@ -77,7 +74,7 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
 ### Light Models
 |Model |size |mAP<sup>val<br>0.5:0.95 | Latency(ms) CPU<br> MNN-Intel-8163| FLOPs<br>(G)| Params<br>(M)| AliYun Download | Google Download|
 | ------        |:---: | :---:     |:---:|:---: | :---: | :---:| :---:|
-| [DAMO-YOLO-N](./configs/damoyolo_tinynasL20_N.py)| 416 | 35.1 | 3.5 | 3.0 | 2.2 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/before_distill/damoyolo_tinynasL20_N_351.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/before_distill/damoyolo_tinynasL20_N_351.onnx) | -- |
+| [DAMO-YOLO-N](./configs/damoyolo_tinynasL20_N.py)| 416 | 35.1 | 35 | 3.0 | 2.2 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/before_distill/damoyolo_tinynasL20_N_351.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/before_distill/damoyolo_tinynasL20_N_351.onnx) | -- |
 
 - We report the mAP of models on COCO2017 validation set, with multi-class NMS.
 - The latency in this table is measured without post-processing(NMS).
