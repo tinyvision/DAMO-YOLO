@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from ..core.bbox_calculator import bbox_overlaps
+from damo.base_models.core.bbox_calculator import bbox_overlaps
 
 
 def reduce_loss(loss, reduction):

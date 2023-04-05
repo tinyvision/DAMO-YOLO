@@ -1,6 +1,6 @@
 # Copyright (C) Alibaba Group Holding Limited. All rights reserved.
 
-from .coco_eval import do_coco_evaluation
+from damo.dataset.datasets.evaluation.coco.coco_eval import do_coco_evaluation
 
 
 def coco_evaluation(

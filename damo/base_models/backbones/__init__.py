@@ -2,9 +2,9 @@
 
 import copy
 
-from .tinynas_csp import load_tinynas_net as load_tinynas_net_csp
-from .tinynas_res import load_tinynas_net as load_tinynas_net_res
-from .tinynas_mob import load_tinynas_net as load_tinynas_net_mob
+from damo.base_models.backbones.tinynas_csp import load_tinynas_net as load_tinynas_net_csp
+from damo.base_models.backbones.tinynas_res import load_tinynas_net as load_tinynas_net_res
+from damo.base_models.backbones.tinynas_mob import load_tinynas_net as load_tinynas_net_mob
 
 
 def build_backbone(cfg):

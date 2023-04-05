@@ -2,7 +2,7 @@
 # Copyright (C) Alibaba Group Holding Limited. All rights reserved.
 from damo.augmentations.scale_aware_aug import SA_Aug
 
-from . import transforms as T
+from damo.dataset import transforms as T
 
 
 def build_transforms(start_epoch,

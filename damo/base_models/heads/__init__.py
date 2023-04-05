@@ -2,7 +2,7 @@
 
 import copy
 
-from .zero_head import ZeroHead
+from damo.base_models.heads import ZeroHead
 
 
 def build_head(cfg):

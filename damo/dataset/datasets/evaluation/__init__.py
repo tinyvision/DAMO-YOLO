@@ -2,7 +2,7 @@
 
 from damo.dataset import datasets
 
-from .coco import coco_evaluation
+from damo.dataset.datasets.evaluation.coco import coco_evaluation
 
 
 def evaluate(dataset, predictions, output_folder, **kwargs):

@@ -1,7 +1,7 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 import torch
 
-from .bounding_box import BoxList
+from damo.structures.bounding_box import BoxList
 
 
 def remove_small_boxes(boxlist, min_size):

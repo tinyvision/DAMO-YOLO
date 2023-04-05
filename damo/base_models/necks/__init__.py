@@ -2,7 +2,7 @@
 
 import copy
 
-from .giraffe_fpn_btn import GiraffeNeckV2
+from damo.base_models.necks.giraffe_fpn_btn import GiraffeNeckV2
 
 
 def build_neck(cfg):

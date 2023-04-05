@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from ..core.ops import ConvBNAct, CSPStage, DepthwiseConv
+from damo.base_models.core.ops import ConvBNAct, CSPStage, DepthwiseConv
 
 
 class GiraffeNeckV2(nn.Module):

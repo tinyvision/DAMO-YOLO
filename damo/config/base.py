@@ -12,8 +12,8 @@ from os.path import dirname, join
 from easydict import EasyDict as easydict
 from tabulate import tabulate
 
-from .augmentations import test_aug, train_aug
-from .paths_catalog import DatasetCatalog
+from damo.config.augmentations import test_aug, train_aug
+from damo.config.paths_catalog import DatasetCatalog
 
 miscs = easydict({
     'print_interval_iters': 50,    # print interval
