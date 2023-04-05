@@ -6,7 +6,7 @@ import math
 import torch.nn as nn
 import torch.nn.functional as F
 
-from .weight_init import kaiming_init, constant_init
+from damo.base_models.core.weight_init import kaiming_init, constant_init
 
 class SiLU(nn.Module):
     """export-friendly version of nn.SiLU()"""

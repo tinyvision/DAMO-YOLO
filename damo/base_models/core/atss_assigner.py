@@ -2,8 +2,7 @@
 
 import torch
 
-from .bbox_calculator import BboxOverlaps2D
-
+from damo.base_models.core.bbox_calculator import BboxOverlaps2D
 
 class AssignResult(object):
     """Stores assignments between predicted and truth boxes.

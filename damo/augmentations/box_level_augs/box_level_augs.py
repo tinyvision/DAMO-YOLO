@@ -6,9 +6,8 @@ import random
 
 import numpy as np
 
-from .color_augs import color_aug_func
-from .geometric_augs import geometric_aug_func
-
+from damo.augmentations.box_level_augs.color_augs import color_aug_func
+from damo.augmentations.box_level_augs.geometric_augs import geometric_aug_func
 
 def _box_sample_prob(bbox, scale_ratios_splits, box_prob=0.3):
     scale_ratios, scale_splits = scale_ratios_splits

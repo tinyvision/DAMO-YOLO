@@ -4,11 +4,11 @@ import torch.nn.functional as F
 
 from damo.utils import postprocess
 
-from ..core.ops import ConvBNAct
-from ..core.ota_assigner import AlignOTAAssigner
-from ..core.utils import Scale, multi_apply, reduce_mean
-from ..core.weight_init import bias_init_with_prob, normal_init
-from ..losses.gfocal_loss import (DistributionFocalLoss, GIoULoss,
+from damo.base_models.core.ops import ConvBNAct
+from damo.base_models.core.ota_assigner import AlignOTAAssigner
+from damo.base_models.core.utils import Scale, multi_apply, reduce_mean
+from damo.base_models.core.weight_init import bias_init_with_prob, normal_init
+from damo.base_models.losses.gfocal_loss import (DistributionFocalLoss, GIoULoss,
                                   QualityFocalLoss)
 
 from loguru import logger

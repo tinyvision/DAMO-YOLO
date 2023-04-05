@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 # Copyright (C) Alibaba Group Holding Limited. All rights reserved.
-import glob
 import re
-from os import path
 
 import setuptools
 import torch
-from torch.utils.cpp_extension import CppExtension
 
 torch_ver = [int(x) for x in torch.__version__.split('.')[:2]]
 assert torch_ver >= [1, 7], 'Requires PyTorch >= 1.7'

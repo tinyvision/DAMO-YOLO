@@ -7,11 +7,11 @@ import torch.utils.data
 
 from damo.utils import get_world_size
 
-from . import datasets as D
-from .collate_batch import BatchCollator
-from .datasets import MosaicWrapper
-from .samplers import DistributedSampler, IterationBasedBatchSampler
-from .transforms import build_transforms
+from damo.dataset import datasets as D
+from damo.dataset.collate_batch import BatchCollator
+from damo.dataset.datasets import MosaicWrapper
+from damo.dataset.samplers import DistributedSampler, IterationBasedBatchSampler
+from damo.dataset.transforms import build_transforms
 
 
 def build_dataset(cfg, ann_files, is_train=True, mosaic_mixup=None):

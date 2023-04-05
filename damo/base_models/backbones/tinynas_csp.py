@@ -3,8 +3,7 @@
 import torch
 import torch.nn as nn
 
-from ..core.ops import Focus, RepConv, SPPBottleneck, get_activation
-
+from damo.base_models.core.ops import Focus, RepConv, SPPBottleneck, get_activation
 
 class ConvKXBN(nn.Module):
     def __init__(self, in_c, out_c, kernel_size, stride):

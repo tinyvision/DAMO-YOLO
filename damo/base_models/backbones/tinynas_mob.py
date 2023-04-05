@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import math
 
-from ..core.ops import Focus, RepConv, SPPBottleneck, get_activation, DepthwiseConv
+from damo.base_models.core.ops import Focus, RepConv, SPPBottleneck, get_activation, DepthwiseConv
 
 class Hsigmoid(nn.Module):
     def __init__(self, inplace=True):

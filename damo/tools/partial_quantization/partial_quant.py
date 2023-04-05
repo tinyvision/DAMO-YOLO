@@ -14,9 +14,9 @@ from damo.base_models.core.ops import RepConv, SiLU
 from damo.config.base import parse_config
 from damo.detectors.detector import build_local_model
 from damo.utils.model_utils import get_model_info, replace_module
-from tools.trt_eval import trt_inference
+from damo.tools.trt_eval import trt_inference
 
-from tools.partial_quantization.utils import post_train_quant, load_quanted_model, execute_partial_quant, init_calib_data_loader
+from damo.tools.partial_quantization.utils import post_train_quant, load_quanted_model, execute_partial_quant, init_calib_data_loader
 
 from pytorch_quantization import nn as quant_nn
 
