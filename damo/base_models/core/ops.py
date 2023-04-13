@@ -7,6 +7,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from .weight_init import kaiming_init, constant_init
+from damo.utils import make_divisible
+
 
 class SiLU(nn.Module):
     """export-friendly version of nn.SiLU()"""
@@ -217,19 +219,14 @@ class MobileV3Block(nn.Module):
                  act='silu',
                  reparam=False,
                  block_type='k1kx',
-                 depthwise=False,
-                 use_se=False):
+                 depthwise=False,):
         super(MobileV3Block, self).__init__()
         self.stride = stride
-
-        branch_features = math.ceil(out_c * 2.2)
+        self.exp_ratio = 3.0
+        branch_features = math.ceil(out_c * self.exp_ratio)
+        branch_features = make_divisible(branch_features)
 
         #assert (self.stride != 1) or (in_c == branch_features << 1)
-
-        if use_se:
-            SELayer = SEModule
-        else:
-            SELayer = nn.Identity
 
         self.conv = nn.Sequential(
             nn.Conv2d(
@@ -250,7 +247,6 @@ class MobileV3Block(nn.Module):
                 padding=2,
             ),
             nn.BatchNorm2d(branch_features),
-            SELayer(branch_features),
             get_activation(act),
             nn.Conv2d(
                 branch_features,
@@ -290,7 +286,7 @@ class BasicBlock_3x3_Reverse(nn.Module):
             self.conv2 = RepConv(ch_in, ch_hidden, 3, stride=1, act=act)
         else:
             self.conv = MobileV3Block(in_c=ch_in, out_c=ch_out, btn_c=None,
-                kernel_size=5, stride=1, act=act, use_se=True)
+                kernel_size=5, stride=1, act=act)
 
 
         self.shortcut = shortcut

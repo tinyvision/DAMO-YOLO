@@ -30,6 +30,11 @@ def make_parser():
         type=str,
         help='expriment description file',
     )
+    parser.add_argument(
+        '--benchmark',
+        action='store_true',
+        help='if true, export without postprocess'
+    )
     parser.add_argument('-c',
                         '--ckpt',
                         default=None,
@@ -114,7 +119,7 @@ def trt_export(onnx_path, batch_size, inference_h, inference_w, trt_mode, calib_
 
     EXPLICIT_BATCH = 1 << (int)(
         trt.NetworkDefinitionCreationFlag.EXPLICIT_BATCH)
-    
+
     logger.info(f'trt_{trt_mode} converting ...')
     with trt.Builder(TRT_LOGGER) as builder, \
         builder.create_network(EXPLICIT_BATCH) as network, \
@@ -133,12 +138,12 @@ def trt_export(onnx_path, batch_size, inference_h, inference_w, trt_mode, calib_
         logger.info('Building an engine.  This would take a while...')
         config = builder.create_builder_config()
         config.max_workspace_size = 2 << 30
-        
+
         if trt_mode == 'fp16':
             assert (builder.platform_has_fast_fp16 == True), 'not support fp16'
             # builder.fp16_mode = True
             config.flags |= 1 << int(trt.BuilderFlag.FP16)
-            
+
         if trt_mode == 'int8':
             config.flags |= 1 << int(trt.BuilderFlag.INT8)
             config.flags |= 1 << int(trt.BuilderFlag.FP16)
@@ -187,6 +192,8 @@ def main():
     # init and load model
     config = parse_config(args.config_file)
     config.merge(args.opts)
+    if args.benchmark:
+        config.model.head.export_with_post = False
 
     if args.batch_size is not None:
         config.test.batch_size = args.batch_size

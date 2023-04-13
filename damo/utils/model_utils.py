@@ -14,7 +14,16 @@ __all__ = [
     'fuse_model',
     'get_model_info',
     'replace_module',
+    'make_divisible'
 ]
+
+def make_divisible(v, divisor=8, min_value=None):
+    if min_value is None:
+        min_value = divisor
+    new_v = max(min_value, int(v + divisor / 2) // divisor * divisor)
+    if new_v < 0.9 * v:
+        new_v += divisor
+    return new_v
 
 
 def get_latency(model, inp, iters=500, warmup=2):
@@ -52,6 +61,7 @@ def get_model_info(model, tsize):
 
     _, total_latency = get_latency(model, img)
     total_flops = 0
+    total_params = 0
     info = ''
     for name, flops, params, latency in zip(('backbone', 'neck', 'head'),
                                             (bf, nf, hf), (bp, np, hp),
@@ -60,10 +70,11 @@ def get_model_info(model, tsize):
         flops /= 1e9
         flops *= tsize[0] * tsize[1] / stride / stride * 2  # Gflops
         total_flops += flops
+        total_params += params
         info += f"{name}'s params(M): {params:.2f}, " + \
                 f'flops(G): {flops:.2f}, latency(ms): {latency*1000:.3f}\n'
     info += f'total latency(ms): {total_latency*1000:.3f}, ' + \
-            f'total flops(G): {total_flops:.2f}\n'
+            f'total flops(G): {total_flops:.2f}, ' + f'total params(M): {total_params:.2f}\n'
     return info
 
 

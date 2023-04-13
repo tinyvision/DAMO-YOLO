@@ -81,10 +81,14 @@ class ZeroHead(nn.Module):
             nms_iou_thre=0.7,
             nms=True,
             legacy=True,
+            last_kernel_size=3,
+            export_with_post=True,
             **kwargs):
         self.in_channels = in_channels
         self.num_classes = num_classes
         self.stacked_convs = stacked_convs
+        self.last_kernel_size = last_kernel_size
+        self.export_with_post = export_with_post
         self.act = act
         self.strides = strides
         if stacked_convs == 0:
@@ -160,15 +164,15 @@ class ZeroHead(nn.Module):
         self.gfl_cls = nn.ModuleList([
             nn.Conv2d(self.feat_channels[i],
                       self.cls_out_channels,
-                      3,
-                      padding=1) for i in range(len(self.strides))
+                      self.last_kernel_size, # 3
+                      padding=0) for i in range(len(self.strides))
         ])
 
         self.gfl_reg = nn.ModuleList([
             nn.Conv2d(self.feat_channels[i],
                       4 * (self.reg_max + 1),
-                      3,
-                      padding=1) for i in range(len(self.strides))
+                      self.last_kernel_size, # 3
+                      padding=0) for i in range(len(self.strides))
         ])
 
         self.scales = nn.ModuleList([Scale(1.0) for _ in self.strides])
@@ -266,16 +270,31 @@ class ZeroHead(nn.Module):
             self.gfl_reg,
             self.scales,
         )
-        cls_scores = torch.cat(cls_scores, dim=1)[:, :, :self.num_classes]
-        bbox_preds = torch.cat(bbox_preds, dim=1)
-        # batch bbox decode
-        bbox_preds = self.integral(bbox_preds) * self.mlvl_priors[..., 2, None]
-        bbox_preds = distance2bbox(self.mlvl_priors[..., :2], bbox_preds)
 
-        if self.nms:
-            output = postprocess(cls_scores, bbox_preds, self.num_classes,
+        if self.export_with_post:
+            cls_scores_new, bbox_preds_new = [], []
+            for cls_score, bbox_pred in zip(cls_scores, bbox_preds):
+                N, C, H, W = bbox_pred.size()
+                bbox_pred = F.softmax(bbox_pred.reshape(N, 4, self.reg_max + 1, H, W),
+                    dim=2)
+                bbox_pred = bbox_pred.reshape(N, 4, self.reg_max + 1, H, W)
+                cls_score = cls_score.flatten(start_dim=2).permute(
+                    0, 2, 1)
+                bbox_pred = bbox_pred.flatten(start_dim=3).permute(
+                    0, 3, 1, 2)
+                cls_scores_new.append(cls_score)
+                bbox_preds_new.append(bbox_pred)
+
+            cls_scores = torch.cat(cls_scores_new, dim=1)[:, :, :self.num_classes]
+            bbox_preds = torch.cat(bbox_preds_new, dim=1)
+
+            bbox_preds = self.integral(bbox_preds) * self.mlvl_priors[..., 2, None]
+            bbox_preds = distance2bbox(self.mlvl_priors[..., :2], bbox_preds)
+
+            if self.nms:
+                output = postprocess(cls_scores, bbox_preds, self.num_classes,
                                  self.nms_conf_thre, self.nms_iou_thre, imgs)
-            return output
+                return output
         return cls_scores, bbox_preds
 
     def forward_single(self, x, cls_convs, reg_convs, gfl_cls, gfl_reg, scale):
@@ -290,21 +309,24 @@ class ZeroHead(nn.Module):
             reg_feat = reg_conv(reg_feat)
 
         bbox_pred = scale(gfl_reg(reg_feat)).float()
+        cls_score = gfl_cls(cls_feat).sigmoid()
         N, C, H, W = bbox_pred.size()
         if self.training:
             bbox_before_softmax = bbox_pred.reshape(N, 4, self.reg_max + 1, H,
                                                     W)
             bbox_before_softmax = bbox_before_softmax.flatten(
                 start_dim=3).permute(0, 3, 1, 2)
-        bbox_pred = F.softmax(bbox_pred.reshape(N, 4, self.reg_max + 1, H, W),
-                              dim=2)
 
-        cls_score = gfl_cls(cls_feat).sigmoid()
+            bbox_pred = F.softmax(bbox_pred.reshape(N, 4, self.reg_max + 1, H, W),
+                                 dim=2)
 
-        cls_score = cls_score.flatten(start_dim=2).permute(
-            0, 2, 1)  # N, h*w, self.num_classes+1
-        bbox_pred = bbox_pred.flatten(start_dim=3).permute(
-            0, 3, 1, 2)  # N, h*w, 4, self.reg_max+1
+            bbox_pred = bbox_pred.reshape(N, 4, self.reg_max + 1, H, W)
+
+            cls_score = cls_score.flatten(start_dim=2).permute(
+                0, 2, 1)  # N, h*w, self.num_classes+1
+            bbox_pred = bbox_pred.flatten(start_dim=3).permute(
+                0, 3, 1, 2)  # N, h*w, 4, self.reg_max+1
+
         if self.training:
             return cls_score, bbox_pred, bbox_before_softmax
         else:

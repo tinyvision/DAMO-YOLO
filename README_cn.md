@@ -17,10 +17,12 @@
 
 欢迎来到**DAMO-YOLO**！DAMO-YOLO是由阿里巴巴达摩院智能计算实验室TinyML团队开发的一个兼顾速度与精度的目标检测框架,其效果超越了目前的一众YOLO系列方法，在实现SOTA的同时，保持了很高的推理速度。DAMO-YOLO是在YOLO框架基础上引入了一系列新技术，对整个检测框架进行了大幅的修改。具体包括：基于NAS搜索的高效检测骨干网络，更深的多尺度特征融合检测颈部，精简的检测头结构，以及引入蒸馏技术实现效果的进一步提升。具体细节可以参考我们的[技术报告](https://arxiv.org/abs/2211.15444)。模型之外，DAMO-YOLO还提供高效的训练策略以及便捷易用的部署工具，帮助您快速解决工业落地中的实际问题！
 
-<div align="center"><img src="assets/curve.png" width="500"></div>
+<div align="center"><img src="assets/curve.png" width="500"><img src="assets/nano_curve.png" width="500"></div>
 
 ## 更新日志
-- **[2023/03/13: DAMO-YOLO v0.3.0更新!] ![new](https://img.alicdn.com/imgextra/i4/O1CN01kUiDtl1HVxN6G56vN_!!6000000000764-2-tps-43-19.png)**
+- **[2023/04/12: DAMO-YOLO v0.3.1更新!] ![new](https://img.alicdn.com/imgextra/i4/O1CN01kUiDtl1HVxN6G56vN_!!6000000000764-2-tps-43-19.png)**
+    * 升级面向端上的DAMO-YOLO-Nano系列模型，仅用1.56/3.69/6.04GFlops即可在COCO数据集上达到32.3/38.2/40.5的mAP，在Intel-CPU平台上运行latency仅需4.08/5.05/6.69毫秒。
+- **[2023/03/13: DAMO-YOLO v0.3.0更新!]**
     * 开源面向端上的DAMO-YOLO-Nano模型，仅用3.02GFLops在COCO数据集上达到35.1的mAP。
     * 更新升级了optimizer builder，现在通过编辑config文件中的optimizer，即可使用任意一款Pytorch支持的优化器进行训练。
     * 更新了data loader流程，给DAMO-YOLO全系列模型精度带来显著提升，其中DAMO-YOLO-S模型mAP从46.8提升到47.7，DAMO-YOLO-T模型mAP从43.0提升到43.6。
@@ -71,13 +73,34 @@
 - 蒸馏时，使用S作为老师蒸馏T，M作为老师蒸馏S，而M则进行自蒸馏。
 
 ### 端上模型
+|Model |size |mAP<sup>val<br>0.5:0.95 | Latency(ms) CPU<br> OpenVino-Intel8163| FLOPs<br>(G)| Params<br>(M)| AliYun Download | Google Download|
+| ------        |:---: | :---:     |:---:|:---: | :---: | :---:| :---:|
+| [DAMO-YOLO-Ns](./configs/damoyolo_tinynasL18_Ns.py)| 416| 32.3 | 4.08| 1.56 | 1.41 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/ckpt/before_distill/damoyolo_nano_small.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/before_distill/damoyolo_nano_small.onnx) | -- |
+| [DAMO-YOLO-Nm](./configs/damoyolo_tinynasL18_Nm.py)| 416| 38.2 | 5.05| 3.69 | 2.71 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/ckpt/before_distill/damoyolo_nano_middle.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/before_distill/damoyolo_nano_middle.onnx) | -- |
+| [DAMO-YOLO-Nl](./configs/damoyolo_tinynasL20_Nl.py)| 416| 40.5 | 6.69| 6.04 | 5.69 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/ckpt/before_distill/damoyolo_nano_large.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/before_distill/damoyolo_nano_large.onnx) | -- |
+
+<details>
+<summary>Legacy models</summary>
+
+
 |Model |size |mAP<sup>val<br>0.5:0.95 | Latency(ms) CPU<br> MNN-Intel-8163| FLOPs<br>(G)| Params<br>(M)| AliYun Download | Google Download|
 | ------        |:---: | :---:     |:---:|:---: | :---: | :---:| :---:|
 | [DAMO-YOLO-N](./configs/damoyolo_tinynasL20_N.py)| 416 | 35.1 | 35 | 3.0 | 2.2 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/before_distill/damoyolo_tinynasL20_N_351.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/before_distill/damoyolo_tinynasL20_N_351.onnx) | -- |
 
+</details>
+
 - 上表中汇报的是COCO2017 val集上的结果, 测试时使用multi-class NMS。
 - 其中latency中不包括后处理时间。
-- X86-CPU的latency测试基于[MNN-2.4.0](https://github.com/alibaba/MNN)。
+- Latency测试基于[OpenVINO-2022.3.0](https://github.com/openvinotoolkit/openvino)，可以通过如下的配置修改和命令复现该测速结果:
+    ```shell
+    # onnx export, enable --benchmark to ignore postprocess
+    python tools/converter.py -f configs/damoyolo_tinynasL18_Ns.py -c ../damoyolo_tinynasL18_Ns.pth --batch_size 1  --img_size 416 --benchmark
+    # model transform
+    mo --input_model damoyolo_tinynasL18_Ns.onnx --data_type FP16
+    # latency benchmark
+    ./benchmark_app -m damoyolo_tinynasL18_Ns.xml -i ./assets/dog.jpg -api sync -d CPU -b 1 -hint latency 
+    ```
+ 
 
 
 ## 快速上手

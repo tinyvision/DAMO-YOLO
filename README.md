@@ -16,10 +16,12 @@ English | [简体中文](README_cn.md)
 
 Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, which is developed by TinyML Team from Alibaba DAMO Data Analytics and Intelligence Lab. And it achieves a higher performance than state-of-the-art YOLO series. DAMO-YOLO is extend from YOLO but with some new techs, including Neural Architecture Search (NAS) backbones, efficient Reparameterized Generalized-FPN (RepGFPN), a lightweight head with AlignedOTA label assignment, and distillation enhancement. For more details, please refer to our [Arxiv Report](https://arxiv.org/abs/2211.15444). Moreover, here you can find not only powerful models, but also highly efficient training strategies and complete tools from training to deployment.
 
-<div align="center"><img src="assets/curve.png" width="500"></div>
+<div align="center"><img src="assets/curve.png" width="500"><img src="assets/nano_curve.png" width="500"></div>
 
 ## Updates
-- **[2023/03/13: We release DAMO-YOLO v0.3.0!] ![new](https://img.alicdn.com/imgextra/i4/O1CN01kUiDtl1HVxN6G56vN_!!6000000000764-2-tps-43-19.png)**
+- **[2023/04/12: We release DAMO-YOLO v0.3.1!] ![new](https://img.alicdn.com/imgextra/i4/O1CN01kUiDtl1HVxN6G56vN_!!6000000000764-2-tps-43-19.png)**
+    * Upgrade the DAMO-YOLO-Nano series model, which achieves 32.3/38.2/40.5 mAP with only 1.56/3.69/6.04 Flops, and runs in real-time at 4.08/5.05/6.69ms using Intel-CPU. 
+- **[2023/03/13: We release DAMO-YOLO v0.3.0!]**
     * Release DAMO-YOLO-Nano, which achieves 35.1 mAP with only 3.02GFlops.
     * Upgrade the optimizer builder, edits the optimizer config, you are able to use any optimizer supported by Pytorch.
     * Upgrade the data loading pipeline and training parameters, leading to significant improvements of DAMO-YOLO models, e.g., the mAP of DAMO-YOLO-T/S/M increased from 43.0/46.8/50.0 to 43.6/47.7/50.2 respectively. 
@@ -72,13 +74,33 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
 
 
 ### Light Models
+|Model |size |mAP<sup>val<br>0.5:0.95 | Latency(ms) CPU<br> OpenVino-Intel8163| FLOPs<br>(G)| Params<br>(M)| AliYun Download | Google Download|
+| ------        |:---: | :---:     |:---:|:---: | :---: | :---:| :---:|
+| [DAMO-YOLO-Ns](./configs/damoyolo_tinynasL18_Ns.py)| 416| 32.3 | 4.08| 1.56 | 1.41 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/ckpt/before_distill/damoyolo_nano_small.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/before_distill/damoyolo_nano_small.onnx) | -- |
+| [DAMO-YOLO-Nm](./configs/damoyolo_tinynasL18_Nm.py)| 416| 38.2 | 5.05| 3.69 | 2.71 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/ckpt/before_distill/damoyolo_nano_middle.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/before_distill/damoyolo_nano_middle.onnx) | -- |
+| [DAMO-YOLO-Nl](./configs/damoyolo_tinynasL20_Nl.py)| 416| 40.5 | 6.69| 6.04 | 5.69 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/ckpt/before_distill/damoyolo_nano_large.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/before_distill/damoyolo_nano_large.onnx) | -- |
+
+<details>
+<summary>Legacy models</summary>
+
 |Model |size |mAP<sup>val<br>0.5:0.95 | Latency(ms) CPU<br> MNN-Intel-8163| FLOPs<br>(G)| Params<br>(M)| AliYun Download | Google Download|
 | ------        |:---: | :---:     |:---:|:---: | :---: | :---:| :---:|
 | [DAMO-YOLO-N](./configs/damoyolo_tinynasL20_N.py)| 416 | 35.1 | 35 | 3.0 | 2.2 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/before_distill/damoyolo_tinynasL20_N_351.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/before_distill/damoyolo_tinynasL20_N_351.onnx) | -- |
 
+</details>
+
 - We report the mAP of models on COCO2017 validation set, with multi-class NMS.
-- The latency in this table is measured without post-processing(NMS).
-- The latency is evaluated based on [MNN-2.4.0](https://github.com/alibaba/MNN).
+- The latency in this table is measured without post-processing, following [picodet](https://github.com/PaddlePaddle/PaddleDetection/tree/release/2.6/configs/picodet).
+- The latency is evaluated based on [OpenVINO-2022.3.0](https://github.com/openvinotoolkit/openvino), using commands below:
+     ```shell
+    # onnx export, enable --benchmark to ignore postprocess
+    python tools/converter.py -f configs/damoyolo_tinynasL18_Ns.py -c ../damoyolo_tinynasL18_Ns.pth --batch_size 1  --img_size 416 --benchmark
+    # model transform
+    mo --input_model model_name.onnx --data_type FP16
+    # latency benchmark
+    ./benchmark_app -m model_name.xml -i ./assets/dog.jpg -api sync -d CPU -b 1 -hint latency 
+    ```
+    
 
 
 ## Quick Start

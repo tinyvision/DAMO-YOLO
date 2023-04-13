@@ -6,6 +6,8 @@ import torch.nn.functional as F
 import math
 
 from ..core.ops import Focus, RepConv, SPPBottleneck, get_activation, DepthwiseConv
+from damo.utils import make_divisible
+
 
 class Hsigmoid(nn.Module):
     def __init__(self, inplace=True):
@@ -98,13 +100,18 @@ class MobileV3Block(nn.Module):
                  reparam=False,
                  block_type='k1kx',
                  depthwise=False,
-                 use_se=False):
+                 use_se=False,
+                 block_pos=None):
         super(MobileV3Block, self).__init__()
         self.stride = stride
+        self.exp_ratio = 2.5
+        if block_pos is not None:
+            self.exp_ratio = 3.5 + (block_pos-1) * 0.5
 
-        branch_features = math.ceil(out_c * 2.5)
+        branch_features = math.ceil(out_c * self.exp_ratio)
+        branch_features = make_divisible(branch_features)
 
-        #assert (self.stride != 1) or (in_c == branch_features << 1)
+        # assert (self.stride != 1) or (in_c == branch_features << 1)
 
         if use_se:
             SELayer = SEModule
@@ -164,7 +171,8 @@ class SuperResStem(nn.Module):
                  reparam=False,
                  block_type='k1kx',
                  depthwise=False,
-                 use_se=False,):
+                 use_se=False,
+                 block_pos=None,):
         super(SuperResStem, self).__init__()
         if act is None:
             self.act = torch.relu
@@ -192,7 +200,8 @@ class SuperResStem(nn.Module):
                                      reparam=reparam,
                                      block_type=block_type,
                                      depthwise=depthwise,
-                                     use_se=use_se,)
+                                     use_se=use_se,
+                                     block_pos=block_pos,)
             self.block_list.append(the_block)
             if block_id == 0 and with_spp:
                 self.block_list.append(
@@ -228,10 +237,10 @@ class TinyNAS(nn.Module):
                                       block_info['k'],
                                       act=act)
                 else:
-                    the_block = ConvKXBNRELU(block_info['in'],
+                    the_block = ConvKXBNRELU(3,
                                              block_info['out'],
                                              block_info['k'],
-                                             block_info['s'],
+                                             2,
                                              act=act)
                 self.block_list.append(the_block)
             elif the_block_class == 'SuperResConvK1KX':
@@ -247,7 +256,8 @@ class TinyNAS(nn.Module):
                                          reparam=reparam,
                                          block_type='k1kx',
                                          depthwise=depthwise,
-                                         use_se=use_se)
+                                         use_se=use_se,
+                                         block_pos=idx)
                 self.block_list.append(the_block)
             elif the_block_class == 'SuperResConvKXKX':
                 spp = with_spp if idx == len(structure_info) - 1 else False
