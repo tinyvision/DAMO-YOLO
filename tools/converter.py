@@ -207,7 +207,7 @@ def main():
     if 'model' in ckpt:
         ckpt = ckpt['model']
     model.load_state_dict(ckpt, strict=False)
-    logger.info('loading checkpoint done.')
+    logger.info(f'loading checkpoint from {args.ckpt}.')
 
     model = replace_module(model, nn.SiLU, SiLU)
 

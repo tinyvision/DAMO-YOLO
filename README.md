@@ -21,6 +21,7 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
 ## Updates
 - **[2023/04/12: We release DAMO-YOLO v0.3.1!] ![new](https://img.alicdn.com/imgextra/i4/O1CN01kUiDtl1HVxN6G56vN_!!6000000000764-2-tps-43-19.png)**
     * Upgrade the DAMO-YOLO-Nano series model, which achieves 32.3/38.2/40.5 mAP with only 1.56/3.69/6.04 Flops, and runs in real-time at 4.08/5.05/6.69ms using Intel-CPU. 
+    * Add DAMO-YOLO-L model, which achieves 51.9 mAP with 7.95ms latency using T4-GPU.
 - **[2023/03/13: We release DAMO-YOLO v0.3.0!]**
     * Release DAMO-YOLO-Nano, which achieves 35.1 mAP with only 3.02GFlops.
     * Upgrade the optimizer builder, edits the optimizer config, you are able to use any optimizer supported by Pytorch.
@@ -50,7 +51,8 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
 |[DAMO-YOLO-S*](./configs/damoyolo_tinynasL25_S.py) | 640 | 47.7  | 3.83  | 37.8  | 16.3 |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/clean_model_0317/damoyolo_tinynasL25_S_477.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/damoyolo_tinynasL25_S_477.onnx) |--|
 |[DAMO-YOLO-M](./configs/damoyolo_tinynasL35_M.py) | 640 | 49.2  | 5.62  | 61.8  | 28.2  |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/clean_model_0317/damoyolo_tinynasL35_M_492.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/damoyolo_tinynasL35_M_492.onnx)|--|
 |[DAMO-YOLO-M*](./configs/damoyolo_tinynasL35_M.py) | 640 | 50.2  | 5.62  | 61.8  | 28.2 |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/clean_model_0317/damoyolo_tinynasL35_M_502.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/damoyolo_tinynasL35_M_502.onnx)|--|
-
+|[DAMO-YOLO-L](./configs/damoyolo_tinynasL45_L.py) | 640 | 50.8  | 7.95  | 97.3  | 42.1  |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/clean_model_0317/damoyolo_tinynasL45_L_508.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/damoyolo_tinynasL45_L_508.onnx)|--|
+|[DAMO-YOLO-L*](./configs/damoyolo_tinynasL45_L.py) | 640 | 51.9  | 7.95  | 97.3  | 42.1  |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/clean_model_0317/damoyolo_tinynasL45_L_519.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/damoyolo_tinynasL45_L_519.onnx)|--|
 
 <details>
 
@@ -70,7 +72,7 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
 - We report the mAP of models on COCO2017 validation set, with multi-class NMS.
 - The latency in this table is measured without post-processing(NMS).
 - \* denotes the model trained with distillation.
-- We use S as teacher to distill T, and M as teacher to distill S, while M is distilled by it self.
+- We use S as teacher to distill T, and M as teacher to distill S, ans L as teacher to distill M, while L is distilled by it self.
 
 
 ### Light Models
@@ -79,15 +81,6 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
 | [DAMO-YOLO-Ns](./configs/damoyolo_tinynasL18_Ns.py)| 416| 32.3 | 4.08| 1.56 | 1.41 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/ckpt/before_distill/damoyolo_nano_small.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/before_distill/damoyolo_tinynasL18_Ns.onnx) | -- |
 | [DAMO-YOLO-Nm](./configs/damoyolo_tinynasL18_Nm.py)| 416| 38.2 | 5.05| 3.69 | 2.71 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/ckpt/before_distill/damoyolo_nano_middle.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/before_distill/damoyolo_tinynasL18_Nm.onnx) | -- |
 | [DAMO-YOLO-Nl](./configs/damoyolo_tinynasL20_Nl.py)| 416| 40.5 | 6.69| 6.04 | 5.69 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/ckpt/before_distill/damoyolo_nano_large.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/before_distill/damoyolo_tinynasL20_Nl.onnx) | -- |
-
-<details>
-<summary>Legacy models</summary>
-
-|Model |size |mAP<sup>val<br>0.5:0.95 | Latency(ms) CPU<br> MNN-Intel-8163| FLOPs<br>(G)| Params<br>(M)| AliYun Download | Google Download|
-| ------        |:---: | :---:     |:---:|:---: | :---: | :---:| :---:|
-| [DAMO-YOLO-N](./configs/damoyolo_tinynasL20_N.py)| 416 | 35.1 | 35 | 3.0 | 2.2 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/before_distill/damoyolo_tinynasL20_N_351.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/before_distill/damoyolo_tinynasL20_N_351.onnx) | -- |
-
-</details>
 
 - We report the mAP of models on COCO2017 validation set, with multi-class NMS.
 - The latency in this table is measured without post-processing, following [picodet](https://github.com/PaddlePaddle/PaddleDetection/tree/release/2.6/configs/picodet).

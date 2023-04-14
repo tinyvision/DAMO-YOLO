@@ -165,14 +165,14 @@ class ZeroHead(nn.Module):
             nn.Conv2d(self.feat_channels[i],
                       self.cls_out_channels,
                       self.last_kernel_size, # 3
-                      padding=0) for i in range(len(self.strides))
+                      padding=self.last_kernel_size//2) for i in range(len(self.strides))
         ])
 
         self.gfl_reg = nn.ModuleList([
             nn.Conv2d(self.feat_channels[i],
                       4 * (self.reg_max + 1),
                       self.last_kernel_size, # 3
-                      padding=0) for i in range(len(self.strides))
+                      padding=self.last_kernel_size//2) for i in range(len(self.strides))
         ])
 
         self.scales = nn.ModuleList([Scale(1.0) for _ in self.strides])
@@ -287,7 +287,6 @@ class ZeroHead(nn.Module):
 
             cls_scores = torch.cat(cls_scores_new, dim=1)[:, :, :self.num_classes]
             bbox_preds = torch.cat(bbox_preds_new, dim=1)
-
             bbox_preds = self.integral(bbox_preds) * self.mlvl_priors[..., 2, None]
             bbox_preds = distance2bbox(self.mlvl_priors[..., :2], bbox_preds)
 

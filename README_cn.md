@@ -22,6 +22,7 @@
 ## 更新日志
 - **[2023/04/12: DAMO-YOLO v0.3.1更新!] ![new](https://img.alicdn.com/imgextra/i4/O1CN01kUiDtl1HVxN6G56vN_!!6000000000764-2-tps-43-19.png)**
     * 升级面向端上的DAMO-YOLO-Nano系列模型，仅用1.56/3.69/6.04GFlops即可在COCO数据集上达到32.3/38.2/40.5的mAP，在Intel-CPU平台上运行latency仅需4.08/5.05/6.69毫秒。
+    * 增加DAMO-YOLO-L模型，该模型在COCO数据集上mAP达到51.9，使用T4-GPU推理仅需7.95ms的推理时延。
 - **[2023/03/13: DAMO-YOLO v0.3.0更新!]**
     * 开源面向端上的DAMO-YOLO-Nano模型，仅用3.02GFLops在COCO数据集上达到35.1的mAP。
     * 更新升级了optimizer builder，现在通过编辑config文件中的optimizer，即可使用任意一款Pytorch支持的优化器进行训练。
@@ -51,6 +52,9 @@
 |[DAMO-YOLO-S*](./configs/damoyolo_tinynasL25_S.py) | 640 | 47.7  | 3.83  | 37.8  | 16.3 |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/clean_model_0317/damoyolo_tinynasL25_S_477.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/damoyolo_tinynasL25_S_477.onnx) |--|
 |[DAMO-YOLO-M](./configs/damoyolo_tinynasL35_M.py) | 640 | 49.2  | 5.62  | 61.8  | 28.2  |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/clean_model_0317/damoyolo_tinynasL35_M_492.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/damoyolo_tinynasL35_M_492.onnx)|--|
 |[DAMO-YOLO-M*](./configs/damoyolo_tinynasL35_M.py) | 640 | 50.2  | 5.62  | 61.8  | 28.2 |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/clean_model_0317/damoyolo_tinynasL35_M_502.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/damoyolo_tinynasL35_M_502.onnx)|--|
+|[DAMO-YOLO-L](./configs/damoyolo_tinynasL45_L.py) | 640 | 50.8  | 7.95  | 97.3  | 42.1  |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/clean_model_0317/damoyolo_tinynasL45_L_508.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/damoyolo_tinynasL45_L_508.onnx)|--|
+|[DAMO-YOLO-L*](./configs/damoyolo_tinynasL45_L.py) | 640 | 51.9  | 7.95  | 97.3  | 42.1  |[torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/clean_model_0317/damoyolo_tinynasL45_L_519.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/damoyolo_tinynasL45_L_519.onnx)|--|
+
 
 <details>
 
@@ -70,7 +74,7 @@
 - 上表中汇报的是COCO2017 val集上的结果, 测试时使用multi-class NMS。
 - 其中latency中不包括后处理时间（NMS）。
 - \* 表示模型训练时使用蒸馏。
-- 蒸馏时，使用S作为老师蒸馏T，M作为老师蒸馏S，而M则进行自蒸馏。
+- 蒸馏时，使用S作为老师蒸馏T，M作为老师蒸馏S，L作为老师蒸馏M，而L则进行自蒸馏。
 
 ### 端上模型
 |Model |size |mAP<sup>val<br>0.5:0.95 | Latency(ms) CPU<br> OpenVino-Intel8163| FLOPs<br>(G)| Params<br>(M)| AliYun Download | Google Download|
@@ -78,16 +82,6 @@
 | [DAMO-YOLO-Ns](./configs/damoyolo_tinynasL18_Ns.py)| 416| 32.3 | 4.08| 1.56 | 1.41 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/ckpt/before_distill/damoyolo_nano_small.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/before_distill/damoyolo_tinynasL18_Ns.onnx) | -- |
 | [DAMO-YOLO-Nm](./configs/damoyolo_tinynasL18_Nm.py)| 416| 38.2 | 5.05| 3.69 | 2.71 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/ckpt/before_distill/damoyolo_nano_middle.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/before_distill/damoyolo_tinynasL18_Nm.onnx) | -- |
 | [DAMO-YOLO-Nl](./configs/damoyolo_tinynasL20_Nl.py)| 416| 40.5 | 6.69| 6.04 | 5.69 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/ckpt/before_distill/damoyolo_nano_large.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/before_distill/damoyolo_tinynasL20_Nl.onnx) | -- |
-
-<details>
-<summary>Legacy models</summary>
-
-
-|Model |size |mAP<sup>val<br>0.5:0.95 | Latency(ms) CPU<br> MNN-Intel-8163| FLOPs<br>(G)| Params<br>(M)| AliYun Download | Google Download|
-| ------        |:---: | :---:     |:---:|:---: | :---: | :---:| :---:|
-| [DAMO-YOLO-N](./configs/damoyolo_tinynasL20_N.py)| 416 | 35.1 | 35 | 3.0 | 2.2 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/before_distill/damoyolo_tinynasL20_N_351.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/before_distill/damoyolo_tinynasL20_N_351.onnx) | -- |
-
-</details>
 
 - 上表中汇报的是COCO2017 val集上的结果, 测试时使用multi-class NMS。
 - 其中latency中不包括后处理时间。
