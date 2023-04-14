@@ -16,7 +16,7 @@ English | [简体中文](README_cn.md)
 
 Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, which is developed by TinyML Team from Alibaba DAMO Data Analytics and Intelligence Lab. And it achieves a higher performance than state-of-the-art YOLO series. DAMO-YOLO is extend from YOLO but with some new techs, including Neural Architecture Search (NAS) backbones, efficient Reparameterized Generalized-FPN (RepGFPN), a lightweight head with AlignedOTA label assignment, and distillation enhancement. For more details, please refer to our [Arxiv Report](https://arxiv.org/abs/2211.15444). Moreover, here you can find not only powerful models, but also highly efficient training strategies and complete tools from training to deployment.
 
-<div align="center"><img src="assets/curve.png" width="500"></div>
+<div align="center"><img src="assets/curve.png" width="1200"></div>
 
 ## Updates
 - **[2023/04/12: We release DAMO-YOLO v0.3.1!] ![new](https://img.alicdn.com/imgextra/i4/O1CN01kUiDtl1HVxN6G56vN_!!6000000000764-2-tps-43-19.png)**
