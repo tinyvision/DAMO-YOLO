@@ -75,9 +75,9 @@
 ### 端上模型
 |Model |size |mAP<sup>val<br>0.5:0.95 | Latency(ms) CPU<br> OpenVino-Intel8163| FLOPs<br>(G)| Params<br>(M)| AliYun Download | Google Download|
 | ------        |:---: | :---:     |:---:|:---: | :---: | :---:| :---:|
-| [DAMO-YOLO-Ns](./configs/damoyolo_tinynasL18_Ns.py)| 416| 32.3 | 4.08| 1.56 | 1.41 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/ckpt/before_distill/damoyolo_nano_small.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/before_distill/damoyolo_nano_small.onnx) | -- |
-| [DAMO-YOLO-Nm](./configs/damoyolo_tinynasL18_Nm.py)| 416| 38.2 | 5.05| 3.69 | 2.71 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/ckpt/before_distill/damoyolo_nano_middle.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/before_distill/damoyolo_nano_middle.onnx) | -- |
-| [DAMO-YOLO-Nl](./configs/damoyolo_tinynasL20_Nl.py)| 416| 40.5 | 6.69| 6.04 | 5.69 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/ckpt/before_distill/damoyolo_nano_large.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/before_distill/damoyolo_nano_large.onnx) | -- |
+| [DAMO-YOLO-Ns](./configs/damoyolo_tinynasL18_Ns.py)| 416| 32.3 | 4.08| 1.56 | 1.41 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/ckpt/before_distill/damoyolo_nano_small.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/before_distill/damoyolo_tinynasL18_Ns.onnx) | -- |
+| [DAMO-YOLO-Nm](./configs/damoyolo_tinynasL18_Nm.py)| 416| 38.2 | 5.05| 3.69 | 2.71 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/ckpt/before_distill/damoyolo_nano_middle.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/before_distill/damoyolo_tinynasL18_Nm.onnx) | -- |
+| [DAMO-YOLO-Nl](./configs/damoyolo_tinynasL20_Nl.py)| 416| 40.5 | 6.69| 6.04 | 5.69 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/ckpt/before_distill/damoyolo_nano_large.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/release_model/onnx/before_distill/damoyolo_tinynasL20_Nl.onnx) | -- |
 
 <details>
 <summary>Legacy models</summary>

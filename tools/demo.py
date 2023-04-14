@@ -27,7 +27,7 @@ class Infer():
         self.ckpt_path = ckpt
         suffix = ckpt.split('.')[-1]
         if suffix == 'onnx':
-            self.engine_type = 'onnx',
+            self.engine_type = 'onnx'
         elif suffix == 'trt':
             self.engine_type = 'tensorRT'
         elif suffix in ['pt', 'pth']:
@@ -82,6 +82,8 @@ class Infer():
             model = self.build_tensorRT_engine(self.ckpt_path)
         elif engine_type == 'onnx':
             model, self.input_name, self.infer_size, _, _ = self.build_onnx_engine(self.ckpt_path)
+        else:
+            NotImplementedError(f'{engine_type} is not supported yet! Please use one of [onnx, torch, tensorRT]')
 
         return model
 
