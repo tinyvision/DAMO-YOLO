@@ -93,8 +93,17 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
     # latency benchmark
     ./benchmark_app -m damoyolo_tinynasL18_Ns.xml -i ./assets/dog.jpg -api sync -d CPU -b 1 -hint latency 
     ```
-    
+                                                        
 
+### 700+ categories DAMO-YOLO Model
+We provide DAMO-YOLO-S model with 701 categories for general object detection, which has been trained on a large dataset including COCO, Objects365 and OpenImage. This model can also serve as a pre-trained model for fine-tuning in downstream tasks, enabling you to achieve better performance with ease.
+
+|Pretrained Model | Downstream Task |mAP<sup>val<br>0.5:0.95 | AliYun Download | Google Download|
+| ------        |:---: | :---:     |:---:|:---: | :---: | :---:| :---:|
+| 80-categories-DAMO-YOLO-S | VisDrone | 24.6 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/before_distill/damoyolo_tinynasL25_S_456.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/before_distill/damoyolo_tinynasL25_S_456.onnx) | -
+| 701-categories-DAMO-YOLO-S | VisDrone | 26.6 | [torch](http://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/Large-Scale-Training/damo_yolo_s_700%2B.pth),[onnx](http://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/Large-Scale-Training/damo_yolo_s_700%2B.onnx) | -
+- Note: The downloadable model is a pretrained model with 701 categories datasets. We demonstrate the VisDrone results to show that our pretrained model can enhance the performance of downstream tasks.
+<div align="left"><img src="assets/701class_cmp_horizontal.png" width="750"></div>
 
 ## Quick Start
 
