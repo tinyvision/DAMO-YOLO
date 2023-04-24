@@ -21,6 +21,7 @@
 
 ## 更新日志
 - **[2023/04/12: DAMO-YOLO v0.3.1更新!] ![new](https://img.alicdn.com/imgextra/i4/O1CN01kUiDtl1HVxN6G56vN_!!6000000000764-2-tps-43-19.png)**
+    * 增加可检测701类别的DAMO-YOLO-S模型，该模型可覆盖更多应用场景，同时可作为优质预训练模型，提升下游任务性能。
     * 升级面向端上的DAMO-YOLO-Nano系列模型，仅用1.56/3.69/6.04GFlops即可在COCO数据集上达到32.3/38.2/40.5的mAP，在Intel-CPU平台上运行latency仅需4.08/5.05/6.69毫秒。
     * 增加DAMO-YOLO-L模型，该模型在COCO数据集上mAP达到51.9，使用T4-GPU推理仅需7.95ms的推理时延。
 - **[2023/03/13: DAMO-YOLO v0.3.0更新!]**
@@ -95,6 +96,14 @@
     ./benchmark_app -m damoyolo_tinynasL18_Ns.xml -i ./assets/dog.jpg -api sync -d CPU -b 1 -hint latency 
     ```
  
+ ### 701类通用检测模型
+我们提供了可检测701类别的DAMO-YOLO-S模型，该模型在包括COCO、Objects365和OpenImage在内的大型数据集上进行了训练，可覆盖更多应用场景。同时该模型可作为优质预训练模型，显著提升下游检测任务性能。
+|Pretrained Model | Downstream Task |mAP<sup>val<br>0.5:0.95 | AliYun Download | Google Download|
+| ------        |:---: | :---:     |:---:|:---: | :---: | :---:| :---:|
+| 80-categories-DAMO-YOLO-S | VisDrone | 24.6 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/before_distill/damoyolo_tinynasL25_S_456.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/before_distill/damoyolo_tinynasL25_S_456.onnx) | -
+| 701-categories-DAMO-YOLO-S | VisDrone | 26.6 | [torch](http://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/Large-Scale-Training/damo_yolo_s_700%2B.pth),[onnx](http://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/Large-Scale-Training/damo_yolo_s_700%2B.onnx) | -
+- 可下载链接为701类别的预训练的模型，我们此处展示了VisDrone的精度对比来表明我们的预训练模型可以提高下游任务的性能。
+<div align="left"><img src="assets/701class_cmp_horizontal.png" width="750"></div>
 
 
 ## 快速上手
