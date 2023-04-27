@@ -20,7 +20,7 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
 
 ## Updates
 - **[2023/04/12: We release DAMO-YOLO v0.3.1!] ![new](https://img.alicdn.com/imgextra/i4/O1CN01kUiDtl1HVxN6G56vN_!!6000000000764-2-tps-43-19.png)**
-    * Add 701-category DAMO-YOLO-S model, which is designed to cover a wider range of application scenarios. This model also serves as a pre-trained model for fine-tuning in downstream tasks, enabling you to achieve better performance with ease.
+    * Add 701-categories DAMO-YOLO-S model, which cover more application scenarios and serve as high-quality pre-training model to improve the performance of downstream tasks。
     * Upgrade the DAMO-YOLO-Nano series model, which achieves 32.3/38.2/40.5 mAP with only 1.56/3.69/6.04 Flops, and runs in real-time at 4.08/5.05/6.69ms using Intel-CPU. 
     * Add DAMO-YOLO-L model, which achieves 51.9 mAP with 7.95ms latency using T4-GPU.
 - **[2023/03/13: We release DAMO-YOLO v0.3.0!]**
@@ -100,9 +100,9 @@ Welcome to **DAMO-YOLO**! It is a fast and accurate object detection method, whi
 We provide DAMO-YOLO-S model with 701 categories for general object detection, which has been trained on a large dataset including COCO, Objects365 and OpenImage. This model can also serve as a pre-trained model for fine-tuning in downstream tasks, enabling you to achieve better performance with ease.
 
 |Pretrained Model | Downstream Task |mAP<sup>val<br>0.5:0.95 | AliYun Download | Google Download|
-| ------        |:---: | :---:     |:---:|:---: | :---: | :---:| :---:|
-| 80-categories-DAMO-YOLO-S | VisDrone | 24.6 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/before_distill/damoyolo_tinynasL25_S_456.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/before_distill/damoyolo_tinynasL25_S_456.onnx) | -
-| 701-categories-DAMO-YOLO-S | VisDrone | 26.6 | [torch](http://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/Large-Scale-Training/damo_yolo_s_700%2B.pth),[onnx](http://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/Large-Scale-Training/damo_yolo_s_700%2B.onnx) | -
+| ------        |:---: | :---:     |:---:|:---: |
+| 80-categories-DAMO-YOLO-S | VisDrone | 24.6 | [torch](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/clean_models/before_distill/damoyolo_tinynasL25_S_456.pth),[onnx](https://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/onnx/before_distill/damoyolo_tinynasL25_S_456.onnx) | - |
+| 701-categories-DAMO-YOLO-S | VisDrone | 26.6 | [torch](http://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/Large-Scale-Training/damo_yolo_s_700%2B.pth),[onnx](http://idstcv.oss-cn-zhangjiakou.aliyuncs.com/DAMO-YOLO/Large-Scale-Training/damo_yolo_s_700%2B.onnx) | - |
 - Note: The downloadable model is a pretrained model with 701 categories datasets. We demonstrate the VisDrone results to show that our pretrained model can enhance the performance of downstream tasks.
 <div align="left"><img src="assets/701class_cmp_horizontal.png" width="750"></div>
 
