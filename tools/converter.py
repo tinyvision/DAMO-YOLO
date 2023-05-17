@@ -199,14 +199,14 @@ def main():
         config.test.batch_size = args.batch_size
 
     # build model
-    model = build_local_model(config, 'cuda')
+    model = build_local_model(config, device)
     # load model paramerters
-    ckpt = torch.load(args.ckpt, map_location='cpu')
+    ckpt = torch.load(args.ckpt, map_location=device)
 
     model.eval()
     if 'model' in ckpt:
         ckpt = ckpt['model']
-    model.load_state_dict(ckpt, strict=False)
+    model.load_state_dict(ckpt, strict=True)
     logger.info(f'loading checkpoint from {args.ckpt}.')
 
     model = replace_module(model, nn.SiLU, SiLU)
@@ -233,7 +233,7 @@ def main():
                         with_preprocess=args.with_preprocess)
 
     dummy_input = torch.randn(args.batch_size, 3, args.img_size,
-                              args.img_size).to('cuda')
+                              args.img_size).to(device)
     _ = model(dummy_input)
     torch.onnx._export(
         model,
