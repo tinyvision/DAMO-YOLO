@@ -47,7 +47,7 @@ def main():
 
     torch.cuda.set_device(args.local_rank)
     backend = 'nccl' if os.name == 'posix' else 'gloo'
-    torch.distributed.init_process_group(backend='nccl', init_method='env://')
+    torch.distributed.init_process_group(backend=backend', init_method='env://')
     synchronize()
     if args.tea_config is not None:
         tea_config = parse_config(args.tea_config)
