@@ -2,6 +2,7 @@
 # Copyright (C) Alibaba Group Holding Limited. All rights reserved.
 import argparse
 import copy
+import os
 
 import torch
 from loguru import logger
@@ -45,6 +46,7 @@ def main():
     args = make_parser().parse_args()
 
     torch.cuda.set_device(args.local_rank)
+    backend = 'nccl' if os.name == 'posix' else 'gloo'
     torch.distributed.init_process_group(backend='nccl', init_method='env://')
     synchronize()
     if args.tea_config is not None:
