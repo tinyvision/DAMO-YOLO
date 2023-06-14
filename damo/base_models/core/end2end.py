@@ -39,7 +39,7 @@ class TRT8_NMS(torch.autograd.Function):
         boxes,
         scores,
         background_class=-1,
-        box_coding=1,
+        box_coding=0,
         iou_threshold=0.45,
         max_output_boxes=100,
         plugin_version='1',
@@ -63,7 +63,7 @@ class TRT8_NMS(torch.autograd.Function):
                  boxes,
                  scores,
                  background_class=-1,
-                 box_coding=1,
+                 box_coding=0,
                  iou_threshold=0.45,
                  max_output_boxes=100,
                  plugin_version='1',
@@ -277,7 +277,7 @@ class ONNX_TRT8(nn.Module):
         super().__init__()
         self.device = device if device else torch.device('cpu')
         self.background_class = -1,
-        self.box_coding = 1,
+        self.box_coding = 0,
         self.iou_threshold = iou_thres
         self.max_obj = max_obj
         self.plugin_version = '1'
