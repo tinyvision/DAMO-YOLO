@@ -301,6 +301,10 @@ def make_parser():
                         default=True,
                         type=bool,
                         help='whether save visualization results')
+    parser.add_argument('--vid_stride',
+                        default=1,
+                        type=int,
+                        help='video frame-rate stride')
 
 
     return parser
@@ -334,21 +338,26 @@ def main():
             vid_writer = cv2.VideoWriter(
                 save_path, cv2.VideoWriter_fourcc(*"mp4v"),
                 fps, (int(width), int(height)))
+        n = 0
         while True:
-            ret_val, frame = cap.read()
-            if ret_val:
-                bboxes, scores, cls_inds = infer_engine.forward(frame)
-                result_frame = infer_engine.visualize(frame, bboxes, scores, cls_inds, conf=args.conf, save_result=False)
-                if args.save_result:
-                    vid_writer.write(result_frame)
+            # ret_val, frame = cap.read()
+            cap.grab()  # .read() = .grab() followed by .retrieve()
+            if n % args.vid_stride == 0:
+                ret_val, frame = cap.retrieve()
+                if ret_val:
+                    bboxes, scores, cls_inds = infer_engine.forward(frame)
+                    result_frame = infer_engine.visualize(frame, bboxes, scores, cls_inds, conf=args.conf, save_result=False)
+                    if args.save_result:
+                        vid_writer.write(result_frame)
+                    else:
+                        cv2.namedWindow("DAMO-YOLO", cv2.WINDOW_NORMAL)
+                        cv2.imshow("DAMO-YOLO", result_frame)
+                    ch = cv2.waitKey(1)
+                    if ch == 27 or ch == ord("q") or ch == ord("Q"):
+                        break
                 else:
-                    cv2.namedWindow("DAMO-YOLO", cv2.WINDOW_NORMAL)
-                    cv2.imshow("DAMO-YOLO", result_frame)
-                ch = cv2.waitKey(1)
-                if ch == 27 or ch == ord("q") or ch == ord("Q"):
                     break
-            else:
-                break
+            n += 1
 
 
 
