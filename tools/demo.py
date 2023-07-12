@@ -325,7 +325,7 @@ def main():
             vid_writer = cv2.VideoWriter(
                 save_path, cv2.VideoWriter_fourcc(*"mp4v"),
                 fps, (int(width), int(height)))
-        for i in tqdm(range(int(capture.get(cv2.CAP_PROP_FRAME_COUNT)))):
+        for i in tqdm(range(int(cap.get(cv2.CAP_PROP_FRAME_COUNT)))):
             # ret_val, frame = cap.read()
             cap.grab()  # .read() = .grab() followed by .retrieve()
             if i % args.vid_stride == 0:
