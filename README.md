@@ -286,9 +286,6 @@ In order to promote communication among DAMO-YOLO users, we collect third-party 
 - [DAMO-YOLO Code Interpretation](https://blog.csdn.net/jyyqqq/article/details/128419143)
 - [Practical Example for Finetuning on Custom Dataset](https://blog.csdn.net/Cwhgn/article/details/128447380?spm=1001.2014.3001.5501)
 
-## Intern Recruitment
-We are recruiting research intern, if you are interested in object detection, model quantization or NAS, please send your resume to xiuyu.sxy@alibaba-inc.com  
-
 
 ## Cite DAMO-YOLO
 If you use DAMO-YOLO in your research, please cite our work by using the following BibTeX entry:
