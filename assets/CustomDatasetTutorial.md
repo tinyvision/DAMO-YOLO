@@ -74,10 +74,13 @@ In this tutorial, we finetune on DAMO-YOLO-Tiny as example.
 self.train.finetune_path='path/to/damoyolo_tinynasL20_T.pth'
 ```
 - Modify the custom dataset in config file. Change `coco_2017_train` and `coco_2017_test` in `damoyolo_tinynasL20_T.py` to `sample_train_coco` and `sample_test_coco` respectively.
-https://github.com/tinyvision/DAMO-YOLO/blob/6e38813220900955d0f6138429c91a33a79c922f/configs/damoyolo_tinynasL20_T.py#L33-L34
+https://github.com/tinyvision/DAMO-YOLO/blob/cae1f6c8112ee8fa29955ca9c926c5c502311401/configs/damoyolo_tinynasL20_T.py#L33-L34
 
 - Modify the category number in config file. Change `'num_classes': 80` in `damoyolo_tinynasL20_T.py` to `'num_classes': 1`. Because in our toy sample, there is only one category, so we set `num_classes` to 1.
-https://github.com/tinyvision/DAMO-YOLO/blob/6e38813220900955d0f6138429c91a33a79c922f/configs/damoyolo_tinynasL20_T.py#L64-L66
+https://github.com/tinyvision/DAMO-YOLO/blob/cae1f6c8112ee8fa29955ca9c926c5c502311401/configs/damoyolo_tinynasL20_T.py#L64-L66
+
+- Modify the list of class names.
+https://github.com/tinyvision/DAMO-YOLO/blob/cae1f6c8112ee8fa29955ca9c926c5c502311401/configs/damoyolo_tinynasL20_T.py#L77
 
 ## Step4. Finetune on custom dataset
 You can run the finetuning with the following code:
