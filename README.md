@@ -114,7 +114,7 @@ We provide DAMO-YOLO-S model with 701 categories for general object detection, w
 Step1. Install DAMO-YOLO.
 ```shell
 git clone https://github.com/tinyvision/damo-yolo.git
-cd DAMO-YOLO/
+cd damo-yolo/
 conda create -n DAMO-YOLO python=3.7 -y
 conda activate DAMO-YOLO
 conda install pytorch==1.7.0 torchvision==0.8.0 torchaudio==0.7.0 cudatoolkit=10.2 -c pytorch
