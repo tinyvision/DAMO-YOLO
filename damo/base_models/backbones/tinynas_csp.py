@@ -243,7 +243,7 @@ class CSPWrapper(nn.Module):
                                         2,
                                         act=self.act)
         if self.with_spp:
-            self.spp = SPPBottleneck(hidden_dim * 2, hidden_dim * 2)
+            self.spp = SPPBottleneck(hidden_dim * 2, hidden_dim * 2, activation=self.act)
         if len(self.convstem) > 0:
             self.conv_start = ConvKXBNRELU(hidden_dim * 2,
                                            hidden_dim,
