@@ -128,7 +128,7 @@ class SuperResStem(nn.Module):
             self.block_list.append(the_block)
             if block_id == 0 and with_spp:
                 self.block_list.append(
-                    SPPBottleneck(out_channels, out_channels))
+                    SPPBottleneck(out_channels, out_channels, activation=act))
 
     def forward(self, x):
         output = x
