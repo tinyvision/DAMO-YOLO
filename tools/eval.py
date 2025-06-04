@@ -94,7 +94,9 @@ def main():
 
     model = build_local_model(config, device)
     model.head.nms = True
-
+    model.head.nms_conf_thre = args.conf
+    model.head.nms_iou_thre = args.nms
+    
     model.cuda(args.local_rank)
     model.eval()
 
