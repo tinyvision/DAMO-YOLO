@@ -38,4 +38,7 @@ setuptools.setup(
     ],
     cmdclass={'build_ext': torch.utils.cpp_extension.BuildExtension},
     packages=setuptools.find_packages(),
+    package_data={
+    'damo.base_models.backbones.nas_backbones': ['*.txt'],
+    },
 )
